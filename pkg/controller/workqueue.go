@@ -25,7 +25,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog"
-	v1 "kmodules.xyz/client-go/core/v1"
+	core_util "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/client-go/tools/queue"
 )
 
@@ -114,8 +114,8 @@ func (c *Controller) checkPrimary(ObjMeta metav1.ObjectMeta) (bool, error) {
 }
 
 func (c *Controller) ensurePrimaryRole(pod *core.Pod) error {
-	_, _, err := v1.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-		in.Labels = v1.UpsertMap(in.Labels, map[string]string{
+	_, _, err := core_util.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
+		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
 			LabelRole: Primary,
 		})
 		return in
@@ -124,7 +124,7 @@ func (c *Controller) ensurePrimaryRole(pod *core.Pod) error {
 }
 
 func (c *Controller) removePrimaryRole(pod *core.Pod) error {
-	_, _, err := v1.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
+	_, _, err := core_util.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 		labels := pod.Labels
 		delete(labels, LabelRole)
 		in.Labels = labels
