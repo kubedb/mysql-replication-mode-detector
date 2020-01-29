@@ -12,6 +12,7 @@ require (
 	k8s.io/apimachinery v0.16.5-beta.1
 	k8s.io/apiserver v0.0.0-20191114103151-9ca1dc586682
 	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/klog v1.0.0
 	kmodules.xyz/client-go v0.0.0-20200127013029-a6db892785ee
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
 	kubedb.dev/apimachinery v0.13.0-rc.3.0.20200128162220-b5069f30b2fe

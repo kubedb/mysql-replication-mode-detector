@@ -22,7 +22,6 @@ import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
-	"github.com/appscode/go/log"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -33,10 +32,11 @@ import (
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
+	"k8s.io/klog"
 	"kmodules.xyz/client-go/tools/queue"
 )
 
-type LabelController struct {
+type Controller struct {
 	kubeInformerFactory informers.SharedInformerFactory
 	clientConfig        *rest.Config
 	kubeClient          kubernetes.Interface
@@ -66,8 +66,8 @@ func NewLabelController(
 	numThreads int,
 	watchNamespace string,
 	baseName string,
-) *LabelController {
-	return &LabelController{
+) *Controller {
+	return &Controller{
 		kubeInformerFactory: kubeInformerFactory,
 		clientConfig:        clientConfig,
 		kubeClient:          kubeClient,
@@ -83,45 +83,45 @@ func NewLabelController(
 	}
 }
 
-func (lc *LabelController) InitInformer() cache.SharedIndexInformer {
-	return lc.kubeInformerFactory.InformerFor(&corev1.Pod{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+func (c *Controller) InitInformer() cache.SharedIndexInformer {
+	return c.kubeInformerFactory.InformerFor(&corev1.Pod{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return coreinformers.NewFilteredPodInformer(
 			client,
-			lc.watchNamespace,
+			c.watchNamespace,
 			resyncPeriod,
 			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-			lc.tweakListOptions,
+			c.tweakListOptions,
 		)
 	})
 }
 
 // Blocks caller. Intended to be called as a Go routine.
-func (lc *LabelController) RunLabelController(stopCh <-chan struct{}) {
-	go lc.StartAndRunController(stopCh)
+func (c *Controller) RunLabelController(stopCh <-chan struct{}) {
+	go c.StartAndRunController(stopCh)
 
 	<-stopCh
 }
 
 // StartAndRunControllers starts InformerFactory and runs queue.worker
-func (lc *LabelController) StartAndRunController(stopCh <-chan struct{}) {
+func (c *Controller) StartAndRunController(stopCh <-chan struct{}) {
 	defer utilruntime.HandleCrash()
 
-	lc.kubeInformerFactory.Start(stopCh)
+	c.kubeInformerFactory.Start(stopCh)
 
 	// Wait for all involved caches to be synced, before processing items from the queue is started
-	for t, v := range lc.kubeInformerFactory.WaitForCacheSync(stopCh) {
+	for t, v := range c.kubeInformerFactory.WaitForCacheSync(stopCh) {
 		if !v {
-			log.Fatalf("%v timed out waiting for caches to sync", t)
+			klog.Fatalf("%v timed out waiting for caches to sync", t)
 			return
 		}
 	}
-	lc.Run(stopCh)
+	c.Run(stopCh)
 
 	<-stopCh
 }
 
 // Run runs queue.worker
-func (lc *LabelController) Run(stopCh <-chan struct{}) {
-	lc.podQueue.Run(stopCh)
+func (c *Controller) Run(stopCh <-chan struct{}) {
+	c.podQueue.Run(stopCh)
 
 }

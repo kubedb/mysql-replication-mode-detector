@@ -21,8 +21,8 @@ import (
 
 	"kubedb.dev/mysql-replication-mode-detector/pkg/cmds/server"
 
-	"github.com/appscode/go/log"
 	"github.com/spf13/cobra"
+	"k8s.io/klog"
 )
 
 func NewCmdRun(out, errOut io.Writer, stopCh <-chan struct{}) *cobra.Command {
@@ -33,7 +33,7 @@ func NewCmdRun(out, errOut io.Writer, stopCh <-chan struct{}) *cobra.Command {
 		Short:             "Launch MySQL Pod Labeler",
 		DisableAutoGenTag: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			log.Infoln("Starting mysql Pod Labeler...")
+			klog.Infoln("Starting mysql Pod Labeler...")
 
 			if err := o.Complete(); err != nil {
 				return err

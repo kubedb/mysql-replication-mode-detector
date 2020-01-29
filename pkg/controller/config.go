@@ -51,7 +51,7 @@ type LabelerConfig struct {
 	WatchNamespace    string
 }
 
-func (c *LabelerConfig) New() (*LabelController, error) {
+func (c *LabelerConfig) New() (*Controller, error) {
 	hostName, err := os.Hostname()
 	if err != nil {
 		return nil, err

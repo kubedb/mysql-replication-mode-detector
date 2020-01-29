@@ -27,21 +27,21 @@ import (
 	"kmodules.xyz/client-go/tools/portforward"
 )
 
-func (lc *LabelController) queryInMySQLDatabase(objMeta metav1.ObjectMeta, user, password, query string) ([]map[string]string, error) {
-	tunnel, err := lc.forwardPort(objMeta)
+func (c *Controller) queryInMySQLDatabase(objMeta metav1.ObjectMeta, user, password, query string) ([]map[string]string, error) {
+	tunnel, err := c.forwardPort(objMeta)
 	if err != nil {
 		return nil, err
 	}
 	defer tunnel.Close()
 
-	en, err := lc.getMySQLClient(tunnel, user, password)
+	en, err := c.getMySQLClient(tunnel, user, password)
 	if err != nil {
 		return nil, err
 	}
 	defer en.Close()
 
 	// connecting with MySQL database
-	err = lc.eventuallyConnectWithMySQL(en)
+	err = c.eventuallyConnectWithMySQL(en)
 	if err != nil {
 		return nil, err
 	}
@@ -56,10 +56,10 @@ func (lc *LabelController) queryInMySQLDatabase(objMeta metav1.ObjectMeta, user,
 	return r, nil
 }
 
-func (lc *LabelController) forwardPort(objMeta metav1.ObjectMeta) (*portforward.Tunnel, error) {
+func (c *Controller) forwardPort(objMeta metav1.ObjectMeta) (*portforward.Tunnel, error) {
 	tunnel := portforward.NewTunnel(
-		lc.kubeClient.CoreV1().RESTClient(),
-		lc.clientConfig,
+		c.kubeClient.CoreV1().RESTClient(),
+		c.clientConfig,
 		objMeta.Namespace,
 		objMeta.Name,
 		3306,
@@ -71,12 +71,12 @@ func (lc *LabelController) forwardPort(objMeta metav1.ObjectMeta) (*portforward.
 	return tunnel, nil
 }
 
-func (lc *LabelController) getMySQLClient(tunnel *portforward.Tunnel, user, password string) (*xorm.Engine, error) {
+func (c *Controller) getMySQLClient(tunnel *portforward.Tunnel, user, password string) (*xorm.Engine, error) {
 	cnnstr := fmt.Sprintf("%v:%v@tcp(127.0.0.1:%v)/%s", user, password, tunnel.Local, DatabaseName)
 	return xorm.NewEngine("mysql", cnnstr)
 }
 
-func (lc *LabelController) eventuallyConnectWithMySQL(en *xorm.Engine) error {
+func (c *Controller) eventuallyConnectWithMySQL(en *xorm.Engine) error {
 	return wait.PollImmediate(5*time.Second, 5*time.Minute, func() (bool, error) {
 		if err := en.Ping(); err != nil {
 			return false, nil // don't return error. we need to retry.

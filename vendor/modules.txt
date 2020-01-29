@@ -18,10 +18,8 @@ github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
 # github.com/appscode/go v0.0.0-20191119085241-0887d8ec2ecc
-github.com/appscode/go/context
 github.com/appscode/go/encoding/json/types
 github.com/appscode/go/flags
-github.com/appscode/go/log
 github.com/appscode/go/runtime
 github.com/appscode/go/sets
 github.com/appscode/go/types
