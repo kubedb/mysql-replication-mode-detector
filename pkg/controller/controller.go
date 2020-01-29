@@ -3,21 +3,20 @@ package controller
 import (
 	"time"
 
-	"k8s.io/apimachinery/pkg/labels"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
-
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	"github.com/appscode/go/log"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/informers"
-	v12 "k8s.io/client-go/informers/core/v1"
+	coreinformers "k8s.io/client-go/informers/core/v1"
 	"k8s.io/client-go/kubernetes"
-	v1 "k8s.io/client-go/listers/core/v1"
+	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
-	corev1 "k8s.io/kubernetes/pkg/apis/core"
 	"kmodules.xyz/client-go/tools/queue"
 )
 
@@ -39,10 +38,7 @@ type LabelController struct {
 	// MySQL Pod
 	podQueue    *queue.Worker
 	podInformer cache.SharedIndexInformer
-	podLister   v1.PodLister
-
-	// BaseName(StatefulSet name) of the pod
-	baseName string
+	podLister   corelisters.PodLister
 }
 
 func NewLabelController(
@@ -73,7 +69,7 @@ func NewLabelController(
 
 func (lc *LabelController) InitInformer() cache.SharedIndexInformer {
 	return lc.kubeInformerFactory.InformerFor(&corev1.Pod{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-		return v12.NewFilteredPodInformer(
+		return coreinformers.NewFilteredPodInformer(
 			client,
 			lc.watchNamespace,
 			resyncPeriod,

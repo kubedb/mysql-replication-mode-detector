@@ -12,13 +12,16 @@ require (
 	k8s.io/apimachinery v0.16.5-beta.1
 	k8s.io/apiserver v0.0.0-20191114103151-9ca1dc586682
 	k8s.io/client-go v12.0.0+incompatible
-	k8s.io/kubernetes v1.16.3
 	kmodules.xyz/client-go v0.0.0-20200125212626-a094b2ba24c6
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
 	kubedb.dev/apimachinery v0.13.0-rc.3.0.20200126120013-f3cf639cb28a
 )
 
 replace (
+	cloud.google.com/go => cloud.google.com/go v0.38.0
+	git.apache.org/thrift.git => github.com/apache/thrift v0.13.0
+	github.com/prometheus/client_golang => github.com/prometheus/client_golang v0.9.2
+	google.golang.org/api => google.golang.org/api v0.6.1-0.20190607001116-5213b8090861
 	k8s.io/api => k8s.io/api v0.0.0-20191114100352-16d7abae0d2a
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20191114105449-027877536833
 	k8s.io/apimachinery => github.com/kmodules/apimachinery v0.0.0-20191119091232-0553326db082
@@ -26,7 +29,13 @@ replace (
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.0.0-20191114110141-0a35778df828
 	k8s.io/client-go => k8s.io/client-go v0.0.0-20191114101535-6c5935290e33
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.0.0-20191114112024-4bbba8331835
+	k8s.io/component-base => k8s.io/component-base v0.0.0-20191114102325-35a9586014f7
+	k8s.io/klog => k8s.io/klog v0.4.0
 	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.0.0-20191114103820-f023614fb9ea
+	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20190816220812-743ec37842bf
+	k8s.io/kubectl => k8s.io/kubectl v0.0.0-20191114113550-6123e1c827f7
 	k8s.io/kubernetes => github.com/kmodules/kubernetes v1.17.0-alpha.0.0.20191127022853-9d027e3886fd
+	k8s.io/metrics => k8s.io/metrics v0.0.0-20191114105837-a4a2842dc51b
 	k8s.io/repo-infra => k8s.io/repo-infra v0.0.0-20181204233714-00fe14e3d1a3
+	k8s.io/utils => k8s.io/utils v0.0.0-20190801114015-581e00157fb1
 )

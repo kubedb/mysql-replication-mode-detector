@@ -17,7 +17,7 @@ SHELL=/bin/bash -o pipefail
 
 GO_PKG   := kubedb.dev
 REPO     := $(notdir $(shell pwd))
-LABELER  := my-labeler
+BIN      := mysql-labeler
 COMPRESS ?= no
 
 # Where to push the docker image.
@@ -48,7 +48,7 @@ endif
 ###
 
 SRC_PKGS := cmd pkg
-SRC_DIRS := $(SRC_PKGS) test hack/gendocs # directories which hold app source (not vendored)
+SRC_DIRS := $(SRC_PKGS) hack/gendocs # directories which hold app source (not vendored)
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm64
 BIN_PLATFORMS    := $(DOCKER_PLATFORMS) windows/amd64 darwin/amd64
@@ -60,7 +60,7 @@ ARCH := $(if $(GOARCH),$(GOARCH),$(shell go env GOARCH))
 BASEIMAGE_PROD   ?= gcr.io/distroless/static
 BASEIMAGE_DBG    ?= debian:stretch
 
-IMAGE_LABELER    := $(REGISTRY)/$(LABELER)
+IMAGE            := $(REGISTRY)/$(BIN)
 VERSION_PROD     := $(VERSION)
 VERSION_DBG      := $(VERSION)-dbg
 TAG              := $(VERSION)_$(OS)_$(ARCH)
@@ -70,9 +70,9 @@ TAG_DBG          := $(VERSION)-dbg_$(OS)_$(ARCH)
 GO_VERSION       ?= 1.13.6
 BUILD_IMAGE      ?= appscode/golang-dev:$(GO_VERSION)
 
-OUTLABELER = bin/$(OS)_$(ARCH)/$(LABELER)
+OUT = bin/$(OS)_$(ARCH)/$(BIN)
 ifeq ($(OS),windows)
-  OUTLABELER = bin/$(OS)_$(ARCH)/$(LABELER).exe
+  OUT = bin/$(OS)_$(ARCH)/$(BIN).exe
 endif
 
 # Directories that we need created to build/test.
@@ -84,38 +84,8 @@ BUILD_DIRS  := bin/$(OS)_$(ARCH)     \
                $(HOME)/.kube         \
                $(HOME)/.minikube
 
-DOCKERFILE_LABELER_PROD  = hack/docker/my-labeler/Dockerfile.in
-DOCKERFILE_LABELER_DBG   = hack/docker/my-labeler/Dockerfile.dbg
-
-DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
-
-# If you want to build all binaries, see the 'all-build' rule.
-# If you want to build all containers, see the 'all-container' rule.
-# If you want to build AND push all containers, see the 'all-push' rule.
-all: fmt build
-
-include Makefile.stash
-
-# For the following OS/ARCH expansions, we transform OS/ARCH into OS_ARCH
-# because make pattern rules don't match with embedded '/' characters.
-
-build-%:
-	@$(MAKE) build                        \
-	    --no-print-directory              \
-	    GOOS=$(firstword $(subst _, ,$*)) \
-	    GOARCH=$(lastword $(subst _, ,$*))
-
-container-%:
-	@$(MAKE) container                    \
-	    --no-print-directory              \
-	    GOOS=$(firstword $(subst _, ,$*)) \
-	    GOARCH=$(lastword $(subst _, ,$*))
-
-push-%:
-	@$(MAKE) push                         \
-	    --no-print-directory              \
-	    GOOS=$(firstword $(subst _, ,$*)) \
-	    GOARCH=$(lastword $(subst _, ,$*))
+DOCKERFILE_PROD  = hack/docker/mysql-labeler/Dockerfile.in
+DOCKERFILE_DBG   = hack/docker/mysql-labeler/Dockerfile.dbg
 
 version:
 	@echo ::set-output name=version::$(VERSION)
@@ -124,9 +94,6 @@ version:
 	@echo ::set-output name=git_branch::$(git_branch)
 	@echo ::set-output name=commit_hash::$(commit_hash)
 	@echo ::set-output name=commit_timestamp::$(commit_timestamp)
-
-gen:
-	@true
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \
@@ -146,20 +113,20 @@ fmt: $(BUILD_DIRS)
 	        ./hack/fmt.sh $(SRC_DIRS)                           \
 	    "
 
-build: $(OUTLABELER)
+build: $(OUT)
 
 # The following structure defeats Go's (intentional) behavior to always touch
 # result files, even if they have not changed.  This will still run `go` but
 # will not trigger further work if nothing has actually changed.
 
-$(OUTLABELER): .go/$(OUTLABELER).stamp
+$(OUT): .go/$(OUT).stamp
 	@true
 
 
 # This will build the binary under ./.go and update the real binary iff needed.
-.PHONY: .go/$(OUTLABELER).stamp
-.go/$(OUTLABELER).stamp: $(BUILD_DIRS)
-	@echo "making $(OUTLABELER)"
+.PHONY: .go/$(OUT).stamp
+.go/$(OUT).stamp: $(BUILD_DIRS)
+	@echo "making $(OUT)"
 	@docker run                                                 \
 	    -i                                                      \
 	    --rm                                                    \
@@ -184,7 +151,7 @@ $(OUTLABELER): .go/$(OUTLABELER).stamp
 	        ./hack/build.sh                                     \
 	    "
 	@if [ $(COMPRESS) = yes ] && [ $(OS) != darwin ]; then          \
-		echo "compressing $(OUTLABELER)";                               \
+		echo "compressing $(OUT)";                               \
 		@docker run                                                 \
 		    -i                                                      \
 		    --rm                                                    \
@@ -197,34 +164,34 @@ $(OUTLABELER): .go/$(OUTLABELER).stamp
 		    --env HTTP_PROXY=$(HTTP_PROXY)                          \
 		    --env HTTPS_PROXY=$(HTTPS_PROXY)                        \
 		    $(BUILD_IMAGE)                                          \
-		    upx --brute /go/$(OUTLABELER);                              \
+		    upx --brute /go/$(OUT);                              \
 	fi
-	@if ! cmp -s .go/$(OUTLABELER) $(OUTLABELER); then \
-	    mv .go/$(OUTLABELER) $(OUTLABELER);            \
+	@if ! cmp -s .go/$(OUT) $(OUT); then \
+	    mv .go/$(OUT) $(OUT);            \
 	    date >$@;                              \
 	fi
 	@echo
 
 # Used to track state in hidden files.
-DOTFILE_IMAGE_LABELER    = $(subst /,_,$(IMAGE_LABELER))-$(TAG)
+DOTFILE_IMAGE    = $(subst /,_,$(IMAGE))-$(TAG)
 
-containerl: bin/.container-$(DOTFILE_IMAGE_LABELER)-PROD bin/.container-$(DOTFILE_IMAGE_LABELER)-DBG
-bin/.container-$(DOTFILE_IMAGE_LABELER)-%: bin/$(OS)_$(ARCH)/$(LABELER) $(DOCKERFILE_LABELER_%)
-	@echo "container: $(IMAGE_LABELER):$(TAG_$*)"
+container: bin/.container-$(DOTFILE_IMAGE)-PROD bin/.container-$(DOTFILE_IMAGE)-DBG
+bin/.container-$(DOTFILE_IMAGE)-%: bin/$(OS)_$(ARCH)/$(BIN) $(DOCKERFILE_%)
+	@echo "container: $(IMAGE):$(TAG_$*)"
 	@sed                                    \
-		-e 's|{ARG_LABELER}|$(LABELER)|g'   \
+		-e 's|{ARG_BIN}|$(BIN)|g'           \
 		-e 's|{ARG_ARCH}|$(ARCH)|g'         \
 		-e 's|{ARG_OS}|$(OS)|g'             \
 		-e 's|{ARG_FROM}|$(BASEIMAGE_$*)|g' \
-		$(DOCKERFILE_LABELER_$*) > bin/.dockerfile_labeler-$*-$(OS)_$(ARCH)
-	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform $(OS)/$(ARCH) --load --pull -t $(IMAGE_LABELER):$(TAG_$*) -f bin/.dockerfile_labeler-$*-$(OS)_$(ARCH) .
-	@docker images -q $(IMAGE_LABELER):$(TAG_$*) > $@
+		$(DOCKERFILE_$*) > bin/.dockerfile-$*-$(OS)_$(ARCH)
+	@DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform $(OS)/$(ARCH) --load --pull -t $(IMAGE):$(TAG_$*) -f bin/.dockerfile-$*-$(OS)_$(ARCH) .
+	@docker images -q $(IMAGE):$(TAG_$*) > $@
 	@echo
 
-pushl: bin/.push-$(DOTFILE_IMAGE_LABELER)-PROD bin/.push-$(DOTFILE_IMAGE_LABELER)-DBG
-bin/.push-$(DOTFILE_IMAGE_LABELER)-%: bin/.container-$(DOTFILE_IMAGE_LABELER)-%
-	@docker push $(IMAGE_LABELER):$(TAG_$*)
-	@echo "pushed: $(IMAGE_LABELER):$(TAG_$*)"
+push: bin/.push-$(DOTFILE_IMAGE)-PROD bin/.push-$(DOTFILE_IMAGE)-DBG
+bin/.push-$(DOTFILE_IMAGE)-%: bin/.container-$(DOTFILE_IMAGE)-%
+	@docker push $(IMAGE):$(TAG_$*)
+	@echo "pushed: $(IMAGE):$(TAG_$*)"
 	@echo
 
 ADDTL_LINTERS   := goconst,gofmt,goimports,unparam

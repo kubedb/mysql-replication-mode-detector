@@ -9,7 +9,7 @@ import (
 	"kubedb.dev/mysql-primary-labeler/pkg/controller"
 
 	"github.com/spf13/pflag"
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"kmodules.xyz/client-go/meta"
@@ -45,36 +45,36 @@ func NewOptions(out, errOut io.Writer) *Options {
 	}
 }
 
-func (s *Options) AddGoFlags(fs *flag.FlagSet) {
-	fs.Float64Var(&s.QPS, "qps", s.QPS, "The maximum QPS to the master from this client")
-	fs.IntVar(&s.Burst, "burst", s.Burst, "The maximum burst for throttle")
-	fs.DurationVar(&s.ResyncPeriod, "resync-period", s.ResyncPeriod, "If non-zero, will re-list this often. Otherwise, re-list will be delayed aslong as possible (until the upstream source closes the watch or times out.")
+func (o *Options) AddGoFlags(fs *flag.FlagSet) {
+	fs.Float64Var(&o.QPS, "qps", o.QPS, "The maximum QPS to the master from this client")
+	fs.IntVar(&o.Burst, "burst", o.Burst, "The maximum burst for throttle")
+	fs.DurationVar(&o.ResyncPeriod, "resync-period", o.ResyncPeriod, "If non-zero, will re-list this often. Otherwise, re-list will be delayed aslong as possible (until the upstream source closes the watch or times out.")
 
-	fs.BoolVar(&s.RestrictToOperatorNamespace, "restrict-to-operator-namespace", s.RestrictToOperatorNamespace, "If true, operator will only handle Kubernetes objects in its own namespace.")
+	fs.BoolVar(&o.RestrictToOperatorNamespace, "restrict-to-operator-namespace", o.RestrictToOperatorNamespace, "If true, operator will only handle Kubernetes objects in its own namespace.")
 }
 
-func (s *Options) AddFlags(fs *pflag.FlagSet) {
+func (o *Options) AddFlags(fs *pflag.FlagSet) {
 	pfs := flag.NewFlagSet("labeler-server", flag.ExitOnError)
-	s.AddGoFlags(pfs)
+	o.AddGoFlags(pfs)
 	fs.AddGoFlagSet(pfs)
 }
 
-func (s Options) WatchNamespace() string {
-	if s.RestrictToOperatorNamespace {
-		return s.LabelerNamespace
+func (o Options) WatchNamespace() string {
+	if o.RestrictToOperatorNamespace {
+		return o.LabelerNamespace
 	}
-	return v1.NamespaceAll
+	return corev1.NamespaceAll
 }
 
-func (s *Options) Apply(cfg *controller.LabelerConfig) error {
+func (o *Options) Apply(cfg *controller.LabelerConfig) error {
 	var err error
 
-	cfg.ClientConfig.QPS = float32(s.QPS)
-	cfg.ClientConfig.Burst = s.Burst
-	cfg.ResyncPeriod = s.ResyncPeriod
-	cfg.MaxNumRequeues = s.MaxNumRequeues
-	cfg.NumThreads = s.NumThreads
-	cfg.WatchNamespace = s.WatchNamespace()
+	cfg.ClientConfig.QPS = float32(o.QPS)
+	cfg.ClientConfig.Burst = o.Burst
+	cfg.ResyncPeriod = o.ResyncPeriod
+	cfg.MaxNumRequeues = o.MaxNumRequeues
+	cfg.NumThreads = o.NumThreads
+	cfg.WatchNamespace = o.WatchNamespace()
 
 	if cfg.KubeClient, err = kubernetes.NewForConfig(cfg.ClientConfig); err != nil {
 		return err
