@@ -1,4 +1,4 @@
-module kubedb.dev/mysql-primary-labeler
+module kubedb.dev/mysql-replication-mode-detector
 
 go 1.12
 
@@ -12,14 +12,26 @@ require (
 	k8s.io/apimachinery v0.16.5-beta.1
 	k8s.io/apiserver v0.0.0-20191114103151-9ca1dc586682
 	k8s.io/client-go v12.0.0+incompatible
-	kmodules.xyz/client-go v0.0.0-20200125212626-a094b2ba24c6
+	kmodules.xyz/client-go v0.0.0-20200127013029-a6db892785ee
 	kmodules.xyz/custom-resources v0.0.0-20191130062942-f41b54f62419
-	kubedb.dev/apimachinery v0.13.0-rc.3.0.20200126120013-f3cf639cb28a
+	kubedb.dev/apimachinery v0.13.0-rc.3.0.20200128162220-b5069f30b2fe
 )
 
 replace (
 	cloud.google.com/go => cloud.google.com/go v0.38.0
-	git.apache.org/thrift.git => github.com/apache/thrift v0.13.0
+	git.apache.org/thrift.git => github.com/apache/thrift v0.12.0
+	github.com/Azure/azure-sdk-for-go => github.com/Azure/azure-sdk-for-go v32.5.0+incompatible
+	github.com/Azure/go-ansiterm => github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78
+	github.com/Azure/go-autorest => github.com/Azure/go-autorest v13.0.0+incompatible
+	github.com/Azure/go-autorest/autorest => github.com/Azure/go-autorest/autorest v0.9.0
+	github.com/Azure/go-autorest/autorest/adal => github.com/Azure/go-autorest/autorest/adal v0.5.0
+	github.com/Azure/go-autorest/autorest/azure/auth => github.com/Azure/go-autorest/autorest/azure/auth v0.2.0
+	github.com/Azure/go-autorest/autorest/date => github.com/Azure/go-autorest/autorest/date v0.1.0
+	github.com/Azure/go-autorest/autorest/mocks => github.com/Azure/go-autorest/autorest/mocks v0.2.0
+	github.com/Azure/go-autorest/autorest/to => github.com/Azure/go-autorest/autorest/to v0.2.0
+	github.com/Azure/go-autorest/autorest/validation => github.com/Azure/go-autorest/autorest/validation v0.1.0
+	github.com/Azure/go-autorest/logger => github.com/Azure/go-autorest/logger v0.1.0
+	github.com/Azure/go-autorest/tracing => github.com/Azure/go-autorest/tracing v0.5.0
 	github.com/prometheus/client_golang => github.com/prometheus/client_golang v0.9.2
 	google.golang.org/api => google.golang.org/api v0.6.1-0.20190607001116-5213b8090861
 	k8s.io/api => k8s.io/api v0.0.0-20191114100352-16d7abae0d2a
@@ -38,4 +50,7 @@ replace (
 	k8s.io/metrics => k8s.io/metrics v0.0.0-20191114105837-a4a2842dc51b
 	k8s.io/repo-infra => k8s.io/repo-infra v0.0.0-20181204233714-00fe14e3d1a3
 	k8s.io/utils => k8s.io/utils v0.0.0-20190801114015-581e00157fb1
+	sigs.k8s.io/kustomize => sigs.k8s.io/kustomize v2.0.3+incompatible
+	sigs.k8s.io/structured-merge-diff => sigs.k8s.io/structured-merge-diff v0.0.0-20190817042607-6149e4549fca
+	sigs.k8s.io/yaml => sigs.k8s.io/yaml v1.1.0
 )

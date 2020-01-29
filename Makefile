@@ -17,7 +17,7 @@ SHELL=/bin/bash -o pipefail
 
 GO_PKG   := kubedb.dev
 REPO     := $(notdir $(shell pwd))
-BIN      := mysql-labeler
+BIN      := mysql-replication-mode-detector
 COMPRESS ?= no
 
 # Where to push the docker image.
@@ -84,8 +84,8 @@ BUILD_DIRS  := bin/$(OS)_$(ARCH)     \
                $(HOME)/.kube         \
                $(HOME)/.minikube
 
-DOCKERFILE_PROD  = hack/docker/mysql-labeler/Dockerfile.in
-DOCKERFILE_DBG   = hack/docker/mysql-labeler/Dockerfile.dbg
+DOCKERFILE_PROD  = Dockerfile.in
+DOCKERFILE_DBG   = Dockerfile.dbg
 
 version:
 	@echo ::set-output name=version::$(VERSION)

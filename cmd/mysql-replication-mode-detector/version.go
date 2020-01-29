@@ -13,20 +13,33 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package main
 
 import (
-	"log"
-
-	"kubedb.dev/mysql-primary-labeler/cmds"
-
-	"kmodules.xyz/client-go/logs"
+	v "github.com/appscode/go/version"
 )
 
-func main() {
-	logs.InitLogs()
-	defer logs.FlushLogs()
-	if err := cmds.NewRootCmd().Execute(); err != nil {
-		log.Fatal(err)
-	}
+var (
+	Version         string
+	VersionStrategy string
+	GitTag          string
+	GitBranch       string
+	CommitHash      string
+	CommitTimestamp string
+	GoVersion       string
+	Compiler        string
+	Platform        string
+)
+
+func init() {
+	v.Version.Version = Version
+	v.Version.VersionStrategy = VersionStrategy
+	v.Version.GitTag = GitTag
+	v.Version.GitBranch = GitBranch
+	v.Version.CommitHash = CommitHash
+	v.Version.CommitTimestamp = CommitTimestamp
+	v.Version.GoVersion = GoVersion
+	v.Version.Compiler = Compiler
+	v.Version.Platform = Platform
 }

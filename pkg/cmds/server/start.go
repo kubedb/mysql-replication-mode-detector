@@ -13,10 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package server
 
 import (
-	"kubedb.dev/mysql-primary-labeler/pkg/controller"
+	"kubedb.dev/mysql-replication-mode-detector/pkg/controller"
 
 	"kmodules.xyz/client-go/tools/clientcmd"
 )

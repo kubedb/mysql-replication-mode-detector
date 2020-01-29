@@ -13,12 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package cmds
 
 import (
 	"io"
 
-	"kubedb.dev/mysql-primary-labeler/cmds/server"
+	"kubedb.dev/mysql-replication-mode-detector/pkg/cmds/server"
 
 	"github.com/appscode/go/log"
 	"github.com/spf13/cobra"

@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package server
 
 import (
@@ -21,7 +22,7 @@ import (
 	"time"
 
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
-	"kubedb.dev/mysql-primary-labeler/pkg/controller"
+	"kubedb.dev/mysql-replication-mode-detector/pkg/controller"
 
 	"github.com/spf13/pflag"
 	corev1 "k8s.io/api/core/v1"
