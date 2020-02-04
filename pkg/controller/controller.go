@@ -52,9 +52,9 @@ type Controller struct {
 	tweakListOptions func(*metav1.ListOptions)
 
 	// MySQL Pod
-	podQueue    *queue.Worker
-	podInformer cache.SharedIndexInformer
-	podLister   corelisters.PodLister
+	podQueue           *queue.Worker
+	podInformer        cache.SharedIndexInformer
+	podNamespaceLister corelisters.PodNamespaceLister
 }
 
 func NewLabelController(

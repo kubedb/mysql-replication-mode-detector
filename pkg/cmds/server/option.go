@@ -57,7 +57,7 @@ func NewOptions(out, errOut io.Writer) *Options {
 		NumThreads:                  2,
 		StdOut:                      out,
 		StdErr:                      errOut,
-		RestrictToOperatorNamespace: false,
+		RestrictToOperatorNamespace: true,
 	}
 }
 
@@ -82,7 +82,7 @@ func (o Options) WatchNamespace() string {
 	return corev1.NamespaceAll
 }
 
-func (o *Options) Apply(cfg *controller.LabelerConfig) error {
+func (o *Options) Apply(cfg *controller.Config) error {
 	var err error
 
 	cfg.ClientConfig.QPS = float32(o.QPS)

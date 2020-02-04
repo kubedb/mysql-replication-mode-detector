@@ -50,7 +50,7 @@ func (c *Controller) initWatcher() {
 			}
 		},
 	})
-	c.podLister = c.kubeInformerFactory.Core().V1().Pods().Lister()
+	c.podNamespaceLister = c.kubeInformerFactory.Core().V1().Pods().Lister().Pods(c.watchNamespace)
 }
 
 func (c *Controller) podLabeler(key string) error {
@@ -71,15 +71,15 @@ func (c *Controller) podLabeler(key string) error {
 			return err
 		}
 		if isPrimary {
-			if err := c.ensurePrimaryRole(pod); err != nil {
+			if err := c.ensurePrimaryRoleLabel(pod); err != nil {
 				return err
 			}
 		} else {
-			if err := c.removePrimaryRole(pod); err != nil {
+			if err := c.ensureSecondaryRoleLabel(pod); err != nil {
 				return err
 			}
 		}
-		klog.Infof("Set primary as label in %s/%s pod have succeeded!!", pod.Namespace, pod.Name)
+		klog.Infof("Set label as role(primary/secondary) in %s/%s pod have succeeded!!", pod.Namespace, pod.Name)
 	}
 	return nil
 }
@@ -113,8 +113,9 @@ func (c *Controller) checkPrimary(ObjMeta metav1.ObjectMeta) (bool, error) {
 	return false, nil
 }
 
-func (c *Controller) ensurePrimaryRole(pod *core.Pod) error {
+func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
+		delete(in.Labels, LabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
 			LabelRole: Primary,
 		})
@@ -123,11 +124,12 @@ func (c *Controller) ensurePrimaryRole(pod *core.Pod) error {
 	return err
 }
 
-func (c *Controller) removePrimaryRole(pod *core.Pod) error {
+func (c *Controller) ensureSecondaryRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-		labels := pod.Labels
-		delete(labels, LabelRole)
-		in.Labels = labels
+		delete(pod.Labels, LabelRole)
+		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
+			LabelRole: Secondary,
+		})
 		return in
 	})
 	return err

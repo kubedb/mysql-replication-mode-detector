@@ -38,7 +38,7 @@ const (
 	LabelRole        = v1alpha1.MySQLKey + "/role"
 )
 
-type LabelerConfig struct {
+type Config struct {
 	KubeInformerFactory informers.SharedInformerFactory
 	ClientConfig        *rest.Config
 	KubeClient          kubernetes.Interface
@@ -51,7 +51,7 @@ type LabelerConfig struct {
 	WatchNamespace    string
 }
 
-func (c *LabelerConfig) New() (*Controller, error) {
+func (c *Config) New() (*Controller, error) {
 	hostName, err := os.Hostname()
 	if err != nil {
 		return nil, err

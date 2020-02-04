@@ -30,13 +30,13 @@ func (o *Options) Complete() error {
 	return nil
 }
 
-func (o Options) labelerConfig() (*controller.LabelerConfig, error) {
+func (o Options) labelerConfig() (*controller.Config, error) {
 	config, err := clientcmd.BuildConfigFromContext("", "")
 	if err != nil {
 		return nil, err
 	}
 
-	labelerConfig := controller.LabelerConfig{}
+	labelerConfig := controller.Config{}
 	labelerConfig.ClientConfig = config
 
 	if err := o.Apply(&labelerConfig); err != nil {
