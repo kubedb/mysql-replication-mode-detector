@@ -72,41 +72,45 @@ type MongoDBSpec struct {
 	// Database authentication secret
 	DatabaseSecret *core.SecretVolumeSource `json:"databaseSecret,omitempty" protobuf:"bytes,7,opt,name=databaseSecret"`
 
-	// Secret for KeyFile or SSL certificates. Contains `tls.pem` or keyfile `key.txt` depending on enableSSL.
-	CertificateSecret *core.SecretVolumeSource `json:"certificateSecret,omitempty" protobuf:"bytes,8,opt,name=certificateSecret"`
-
 	// ClusterAuthMode for replicaset or sharding. (default will be x509 if sslmode is not `disabled`.)
 	// See available ClusterAuthMode: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode
-	ClusterAuthMode ClusterAuthMode `json:"clusterAuthMode,omitempty" protobuf:"bytes,9,opt,name=clusterAuthMode,casttype=ClusterAuthMode"`
+	ClusterAuthMode ClusterAuthMode `json:"clusterAuthMode,omitempty" protobuf:"bytes,8,opt,name=clusterAuthMode,casttype=ClusterAuthMode"`
 
 	// SSLMode for both standalone and clusters. (default, disabled.)
 	// See more options: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-sslmode
-	SSLMode SSLMode `json:"sslMode,omitempty" protobuf:"bytes,10,opt,name=sslMode,casttype=SSLMode"`
+	SSLMode SSLMode `json:"sslMode,omitempty" protobuf:"bytes,9,opt,name=sslMode,casttype=SSLMode"`
 
 	// Init is used to initialize database
 	// +optional
-	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,11,opt,name=init"`
+	Init *InitSpec `json:"init,omitempty" protobuf:"bytes,10,opt,name=init"`
 
 	// Monitor is used monitor database instance
 	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,13,opt,name=monitor"`
+	Monitor *mona.AgentSpec `json:"monitor,omitempty" protobuf:"bytes,11,opt,name=monitor"`
 
 	// ConfigSource is an optional field to provide custom configuration file for database (i.e mongod.cnf).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	ConfigSource *core.VolumeSource `json:"configSource,omitempty" protobuf:"bytes,14,opt,name=configSource"`
+	ConfigSource *core.VolumeSource `json:"configSource,omitempty" protobuf:"bytes,12,opt,name=configSource"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,15,opt,name=podTemplate"`
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty" protobuf:"bytes,13,opt,name=podTemplate"`
 
 	// ServiceTemplate is an optional configuration for service used to expose database
 	// +optional
-	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty" protobuf:"bytes,16,opt,name=serviceTemplate"`
+	ServiceTemplate ofst.ServiceTemplateSpec `json:"serviceTemplate,omitempty" protobuf:"bytes,14,opt,name=serviceTemplate"`
 
 	// updateStrategy indicates the StatefulSetUpdateStrategy that will be
 	// employed to update Pods in the StatefulSet when a revision is made to
 	// Template.
-	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,17,opt,name=updateStrategy"`
+	UpdateStrategy apps.StatefulSetUpdateStrategy `json:"updateStrategy,omitempty" protobuf:"bytes,15,opt,name=updateStrategy"`
+
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,16,opt,name=tls"`
+
+	// Secret for KeyFile. Contains keyfile `key.txt` if spec.clusterAuthMode == keyFile || sendKeyFile
+	KeyFile *core.SecretVolumeSource `json:"keyFile,omitempty" protobuf:"bytes,17,opt,name=keyFile"`
 
 	// Indicates that the database is paused and controller will not sync any changes made to this spec.
 	// +optional
@@ -116,17 +120,14 @@ type MongoDBSpec struct {
 	// +optional
 	Halted bool `json:"halted,omitempty" protobuf:"varint,19,opt,name=halted"`
 
-	// TLS contains tls configurations for client and server.
-	// +optional
-	TLS *TLSConfig `json:"tls,omitempty" protobuf:"bytes,20,opt,name=tls"`
-
 	// TerminationPolicy controls the delete operation for database
 	// +optional
-	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,21,opt,name=terminationPolicy,casttype=TerminationPolicy"`
+	TerminationPolicy TerminationPolicy `json:"terminationPolicy,omitempty" protobuf:"bytes,20,opt,name=terminationPolicy,casttype=TerminationPolicy"`
 }
 
 // ClusterAuthMode represents the clusterAuthMode of mongodb clusters ( replicaset or sharding)
 // ref: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-clusterauthmode
+// +kubebuilder:validation:Enum=keyFile;sendKeyFile;sendX509;x509
 type ClusterAuthMode string
 
 const (
@@ -149,6 +150,7 @@ const (
 
 // SSLMode represents available sslmodes of mongodb.
 // ref: https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-sslmode
+// +kubebuilder:validation:Enum=disabled;allowSSL;preferSSL;requireSSL
 type SSLMode string
 
 const (
@@ -170,9 +172,6 @@ const (
 type MongoDBReplicaSet struct {
 	// Name of replicaset
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
-
-	// Deprecated: Use spec.certificateSecret
-	KeyFile *core.SecretVolumeSource `json:"keyFile,omitempty" protobuf:"bytes,2,opt,name=keyFile"`
 }
 
 type MongoDBShardingTopology struct {
