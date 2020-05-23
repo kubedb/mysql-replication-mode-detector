@@ -28,6 +28,14 @@ import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
 
+message Blacklist {
+  // List of all rejected version for standalone ops request
+  repeated string standalone = 1;
+
+  // List of all rejected version for groupReplication ops request
+  repeated string groupReplication = 2;
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=elasticsearchversions,singular=elasticsearchversion,scope=Cluster,shortName=esversion,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
@@ -282,6 +290,14 @@ message MongoDBVersionTools {
   optional string image = 1;
 }
 
+message MySQLUpgradeConstraints {
+  // List of all accepted version for ops request
+  optional Whitelist whitelist = 1;
+
+  // List of all rejected version for ops request
+  optional Blacklist blacklist = 2;
+}
+
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=mysqlversions,singular=mysqlversion,scope=Cluster,shortName=myversion,categories={datastore,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
@@ -322,6 +338,11 @@ message MySQLVersionPodSecurityPolicy {
   optional string databasePolicyName = 1;
 }
 
+// MySQLVersionReplicationModeDetector is the image for the MySQL replication mode detector
+message MySQLVersionReplicationModeDetector {
+  optional string image = 1;
+}
+
 // MySQLVersionSpec is the spec for postgres version
 message MySQLVersionSpec {
   // Version
@@ -336,15 +357,21 @@ message MySQLVersionSpec {
   // Tools Image
   optional MySQLVersionTools tools = 4;
 
+  // ReplicationModeDetector Image
+  optional MySQLVersionReplicationModeDetector replicationModeDetector = 5;
+
   // Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
   // +optional
-  optional bool deprecated = 5;
+  optional bool deprecated = 6;
 
   // Init container Image
-  optional MySQLVersionInitContainer initContainer = 6;
+  optional MySQLVersionInitContainer initContainer = 7;
 
   // PSP names
-  optional MySQLVersionPodSecurityPolicy podSecurityPolicies = 7;
+  optional MySQLVersionPodSecurityPolicy podSecurityPolicies = 8;
+
+  // upgrade constraints
+  optional MySQLUpgradeConstraints upgradeConstraints = 9;
 }
 
 // MySQLVersionTools is the image for the postgres tools
@@ -629,5 +656,13 @@ message RedisVersionSpec {
 
   // PSP names
   optional RedisVersionPodSecurityPolicy podSecurityPolicies = 5;
+}
+
+message Whitelist {
+  // List of all accepted version for standalone ops request. empty indicates all accepted
+  repeated string standalone = 1;
+
+  // List of all accepted version for groupReplication ops request. empty indicates all accepted
+  repeated string groupReplication = 2;
 }
 

@@ -17,6 +17,7 @@ limitations under the License.
 package controller
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -114,23 +115,23 @@ func (c *Controller) checkPrimary(ObjMeta metav1.ObjectMeta) (bool, error) {
 }
 
 func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
-	_, _, err := core_util.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
+	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 		delete(in.Labels, LabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
 			LabelRole: Primary,
 		})
 		return in
-	})
+	}, metav1.PatchOptions{})
 	return err
 }
 
 func (c *Controller) ensureSecondaryRoleLabel(pod *core.Pod) error {
-	_, _, err := core_util.PatchPod(c.kubeClient, pod, func(in *core.Pod) *core.Pod {
+	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 		delete(pod.Labels, LabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
 			LabelRole: Secondary,
 		})
 		return in
-	})
+	}, metav1.PatchOptions{})
 	return err
 }

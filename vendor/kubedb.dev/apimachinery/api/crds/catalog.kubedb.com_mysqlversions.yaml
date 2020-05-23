@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   creationTimestamp: null
   labels:
-    app: kubedb
+    app.kubernetes.io/name: kubedb
   name: mysqlversions.catalog.kubedb.com
 spec:
   additionalPrinterColumns:
@@ -88,6 +88,14 @@ spec:
               required:
               - databasePolicyName
               type: object
+            replicationModeDetector:
+              description: ReplicationModeDetector Image
+              properties:
+                image:
+                  type: string
+              required:
+              - image
+              type: object
             tools:
               description: Tools Image
               properties:
@@ -95,6 +103,42 @@ spec:
                   type: string
               required:
               - image
+              type: object
+            upgradeConstraints:
+              description: upgrade constraints
+              properties:
+                blacklist:
+                  description: List of all rejected version for ops request
+                  properties:
+                    groupReplication:
+                      description: List of all rejected version for groupReplication
+                        ops request
+                      items:
+                        type: string
+                      type: array
+                    standalone:
+                      description: List of all rejected version for standalone ops
+                        request
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                whitelist:
+                  description: List of all accepted version for ops request
+                  properties:
+                    groupReplication:
+                      description: List of all accepted version for groupReplication
+                        ops request. empty indicates all accepted
+                      items:
+                        type: string
+                      type: array
+                    standalone:
+                      description: List of all accepted version for standalone ops
+                        request. empty indicates all accepted
+                      items:
+                        type: string
+                      type: array
+                  type: object
               type: object
             version:
               description: Version
@@ -104,7 +148,9 @@ spec:
           - exporter
           - initContainer
           - podSecurityPolicies
+          - replicationModeDetector
           - tools
+          - upgradeConstraints
           - version
           type: object
       type: object
