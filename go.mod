@@ -13,7 +13,7 @@ require (
 	k8s.io/apiserver v0.18.3
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/klog v1.0.0
-	kmodules.xyz/client-go v0.0.0-20200525195850-2fd180961371
+	kmodules.xyz/client-go v0.0.0-20200630053911-20d035822d35
 	kmodules.xyz/custom-resources v0.0.0-20200604135349-9e9f5c4fdba9
 	kmodules.xyz/monitoring-agent-api v0.0.0-20200525002655-2aa50cb10ce9 // indirect
 	kubedb.dev/apimachinery v0.14.0-alpha.1
