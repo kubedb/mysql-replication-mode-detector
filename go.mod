@@ -16,7 +16,7 @@ require (
 	kmodules.xyz/client-go v0.0.0-20200630053911-20d035822d35
 	kmodules.xyz/custom-resources v0.0.0-20200604135349-9e9f5c4fdba9
 	kmodules.xyz/monitoring-agent-api v0.0.0-20200525002655-2aa50cb10ce9 // indirect
-	kubedb.dev/apimachinery v0.14.0-alpha.1
+	kubedb.dev/apimachinery v0.14.0-beta.0
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
