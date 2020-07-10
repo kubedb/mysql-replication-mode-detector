@@ -740,8 +740,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 kmodules.xyz/objectstore-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20200521035628-e135bf07b226
 kmodules.xyz/offshoot-api/api/v1
-# kubedb.dev/apimachinery v0.14.0-alpha.1
-kubedb.dev/apimachinery/api/crds
+# kubedb.dev/apimachinery v0.14.0-beta.1
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/catalog
 kubedb.dev/apimachinery/apis/catalog/v1alpha1
@@ -757,6 +756,7 @@ kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1
 kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1
 kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1
 kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1
+kubedb.dev/apimachinery/crds
 # sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.7
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/pkg/client
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/proto/client
