@@ -83,7 +83,7 @@ func NewLabelController(
 	}
 }
 
-func (c *Controller) InitInformer() cache.SharedIndexInformer {
+func (c *Controller) initInformer() cache.SharedIndexInformer {
 	return c.kubeInformerFactory.InformerFor(&corev1.Pod{}, func(client kubernetes.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 		return coreinformers.NewFilteredPodInformer(
 			client,
@@ -115,6 +115,7 @@ func (c *Controller) StartAndRunController(stopCh <-chan struct{}) {
 			return
 		}
 	}
+
 	c.Run(stopCh)
 
 	<-stopCh

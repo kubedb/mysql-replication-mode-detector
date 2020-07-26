@@ -22,19 +22,11 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"kmodules.xyz/client-go/tools/portforward"
 )
 
-func (c *Controller) queryInMySQLDatabase(objMeta metav1.ObjectMeta, user, password, query string) ([]map[string]string, error) {
-	tunnel, err := c.forwardPort(objMeta)
-	if err != nil {
-		return nil, err
-	}
-	defer tunnel.Close()
-
-	en, err := c.getMySQLClient(tunnel, user, password)
+func (c *Controller) queryInMySQLDatabase(user, password, query string) ([]map[string]string, error) {
+	en, err := c.getMySQLClient(user, password)
 	if err != nil {
 		return nil, err
 	}
@@ -56,23 +48,8 @@ func (c *Controller) queryInMySQLDatabase(objMeta metav1.ObjectMeta, user, passw
 	return r, nil
 }
 
-func (c *Controller) forwardPort(objMeta metav1.ObjectMeta) (*portforward.Tunnel, error) {
-	tunnel := portforward.NewTunnel(
-		c.kubeClient.CoreV1().RESTClient(),
-		c.clientConfig,
-		objMeta.Namespace,
-		objMeta.Name,
-		3306,
-	)
-
-	if err := tunnel.ForwardPort(); err != nil {
-		return nil, err
-	}
-	return tunnel, nil
-}
-
-func (c *Controller) getMySQLClient(tunnel *portforward.Tunnel, user, password string) (*xorm.Engine, error) {
-	cnnstr := fmt.Sprintf("%v:%v@tcp(127.0.0.1:%v)/%s", user, password, tunnel.Local, DatabaseName)
+func (c *Controller) getMySQLClient(user, password string) (*xorm.Engine, error) {
+	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s", user, password, "localhost", 3306, DatabaseName)
 	return xorm.NewEngine("mysql", cnnstr)
 }
 

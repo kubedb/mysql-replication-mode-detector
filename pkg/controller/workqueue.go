@@ -31,7 +31,7 @@ import (
 )
 
 func (c *Controller) initWatcher() {
-	c.podInformer = c.InitInformer()
+	c.podInformer = c.initInformer()
 	c.podQueue = queue.New("Pod", c.maxNumRequeues, c.numThreads, c.podLabeler)
 	c.podInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
@@ -80,26 +80,26 @@ func (c *Controller) podLabeler(key string) error {
 				return err
 			}
 		}
-		klog.Infof("Set label as role(primary/secondary) in %s/%s pod have succeeded!!", pod.Namespace, pod.Name)
+		klog.Infof("Set label as role(primary/secondary) in Pod %s/%s have succeeded!!", pod.Namespace, pod.Name)
 	}
 	return nil
 }
 
-func (c *Controller) checkPrimary(ObjMeta metav1.ObjectMeta) (bool, error) {
-	user := os.Getenv(KeyMySQLUser)
-	if user == "" {
-		return false, fmt.Errorf("missing 'MYSQL_ROOT_USERNAME' env in MySQL Pod")
+func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
+	user, ok := os.LookupEnv(KeyMySQLUser)
+	if !ok {
+		return false, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", KeyMySQLUser, podMeta.Namespace, podMeta.Name)
 	}
-	password := os.Getenv(KeyMySQLPassword)
-	if user == "" {
-		return false, fmt.Errorf("missing 'MYSQL_ROOT_PASSWORD' env in MySQL Pod")
+	password, ok := os.LookupEnv(KeyMySQLPassword)
+	if !ok {
+		return false, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", KeyMySQLPassword, podMeta.Namespace, podMeta.Name)
 	}
 
 	// MySQL query to check master
 	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
 	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
 	WHERE VARIABLE_NAME='group_replication_primary_member';`
-	result, err := c.queryInMySQLDatabase(ObjMeta, user, password, query)
+	result, err := c.queryInMySQLDatabase(user, password, query)
 	if err != nil {
 		return false, err
 	}
@@ -107,7 +107,7 @@ func (c *Controller) checkPrimary(ObjMeta metav1.ObjectMeta) (bool, error) {
 	host := string(result[0]["MEMBER_HOST"])
 	hostName := strings.Split(host, ".")[0]
 
-	if hostName == ObjMeta.Name {
+	if hostName == podMeta.Name {
 		return true, nil
 	}
 
