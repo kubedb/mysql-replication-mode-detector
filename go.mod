@@ -6,16 +6,16 @@ require (
 	github.com/appscode/go v0.0.0-20200323182826-54e98e09185a
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-xorm/xorm v0.7.9
-	github.com/spf13/cobra v0.0.5
+	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5
-	k8s.io/api v0.18.3
-	k8s.io/apimachinery v0.18.3
-	k8s.io/apiserver v0.18.3
+	k8s.io/api v0.18.5
+	k8s.io/apimachinery v0.18.5
+	k8s.io/apiserver v0.18.5
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/klog v1.0.0
-	kmodules.xyz/client-go v0.0.0-20200818171030-24b2ce405feb
+	kmodules.xyz/client-go v0.0.0-20200903033732-dab39b86c81b
 	kmodules.xyz/custom-resources v0.0.0-20200604135349-9e9f5c4fdba9
-	kubedb.dev/apimachinery v0.14.0-beta.1
+	kubedb.dev/apimachinery v0.14.0-beta.2
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
