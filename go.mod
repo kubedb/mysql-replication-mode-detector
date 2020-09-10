@@ -15,10 +15,7 @@ require (
 	k8s.io/klog v1.0.0
 	kmodules.xyz/client-go v0.0.0-20200922200830-63d86b6e5b63
 	kmodules.xyz/custom-resources v0.0.0-20200922210108-70f2815a43bb
-	kmodules.xyz/monitoring-agent-api v0.0.0-20200922204510-b8b5610e5385 // indirect
-	kmodules.xyz/objectstore-api v0.0.0-20200922210707-59bab27e5d41 // indirect
-	kmodules.xyz/offshoot-api v0.0.0-20200922211229-36acc531abab // indirect
-	kubedb.dev/apimachinery v0.14.0-beta.3
+	kubedb.dev/apimachinery v0.14.0-beta.3.0.20200923235913-10aca81a056d
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d

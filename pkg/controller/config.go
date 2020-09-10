@@ -20,7 +20,6 @@ import (
 	"os"
 	"time"
 
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,9 +32,6 @@ const (
 	KeyMySQLUser     = "MYSQL_ROOT_USERNAME"
 	KeyMySQLPassword = "MYSQL_ROOT_PASSWORD"
 	DatabaseName     = "mysql"
-	Primary          = "primary"
-	Secondary        = "Secondary"
-	LabelRole        = v1alpha1.MySQLKey + "/role"
 )
 
 type Config struct {

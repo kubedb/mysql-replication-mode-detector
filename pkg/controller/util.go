@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"time"
 
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -49,7 +51,7 @@ func (c *Controller) queryInMySQLDatabase(user, password, query string) ([]map[s
 }
 
 func (c *Controller) getMySQLClient(user, password string) (*xorm.Engine, error) {
-	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s", user, password, "localhost", 3306, DatabaseName)
+	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s", user, password, api.LocalHost, api.MySQLNodePort, DatabaseName)
 	return xorm.NewEngine("mysql", cnnstr)
 }
 
