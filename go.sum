@@ -1301,8 +1301,8 @@ kmodules.xyz/offshoot-api v0.0.0-20200521035628-e135bf07b226/go.mod h1:IbK+hCI23
 kmodules.xyz/openshift v0.0.0-20200522123204-ce4abf5433c8/go.mod h1:nVhGcoB3Bi7Ots5+g972Ap/vtyIrrtoK3Z3aulNux7w=
 kmodules.xyz/prober v0.0.0-20200521101241-adf06150535c/go.mod h1:XYWZkfQquD09Mn+O7piHS+SEPq9oFV1Wy2WZ9DA+oeA=
 kmodules.xyz/webhook-runtime v0.0.0-20200522123600-ca70a7e28ed0/go.mod h1:9hUftUcjvzDSiO5LIbe2U8Naz4tyS9Ndf1LRzsytMzs=
-kubedb.dev/apimachinery v0.14.0-beta.2.0.20200908054901-508cc19385f1 h1:4EyeATqJU4f5si2BYAK8hyLJDHbuCYadH/UaZXF6+Iw=
-kubedb.dev/apimachinery v0.14.0-beta.2.0.20200908054901-508cc19385f1/go.mod h1:qLj3vfELjpYLoHP5uQsCTClmjfuYgbpNsbjF7IzNGPI=
+kubedb.dev/apimachinery v0.14.0-beta.2.0.20200910073220-584a4bf6103a h1:xA3AAjcSUrG1iSYCo5QnnzHrIhRrRy91yGjT3Wh3Qog=
+kubedb.dev/apimachinery v0.14.0-beta.2.0.20200910073220-584a4bf6103a/go.mod h1:qLj3vfELjpYLoHP5uQsCTClmjfuYgbpNsbjF7IzNGPI=
 modernc.org/cc v1.0.0/go.mod h1:1Sk4//wdnYJiUIxnW8ddKpaOJCF37yAdqYnkxUpaYxw=
 modernc.org/golex v1.0.0/go.mod h1:b/QX9oBD/LhixY6NDh+IdGv17hgB+51fET1i2kPSmvk=
 modernc.org/mathutil v1.0.0/go.mod h1:wU0vUrJsVWBZ4P6e7xtFJEhFSNsfRLJ8H458uRjg03k=

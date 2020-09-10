@@ -735,7 +735,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 kmodules.xyz/objectstore-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20200521035628-e135bf07b226
 kmodules.xyz/offshoot-api/api/v1
-# kubedb.dev/apimachinery v0.14.0-beta.2.0.20200908054901-508cc19385f1
+# kubedb.dev/apimachinery v0.14.0-beta.2.0.20200910073220-584a4bf6103a
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/autoscaling
 kubedb.dev/apimachinery/apis/autoscaling/v1alpha1
