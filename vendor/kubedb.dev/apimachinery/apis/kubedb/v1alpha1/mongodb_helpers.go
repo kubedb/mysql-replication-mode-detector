@@ -457,50 +457,6 @@ func (m *MongoDB) setDefaultTLSConfig() {
 		},
 	})
 }
-
-func (m *MongoDB) setDefaultTLSConfig() {
-	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
-		return
-	}
-
-	if m.Spec.ShardTopology != nil {
-		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
-			Alias:      string(MongoDBServerCert),
-			SecretName: "",
-			Subject: &kmapi.X509Subject{
-				Organizations:       []string{DatabaseNamePrefix},
-				OrganizationalUnits: []string{string(MongoDBServerCert)},
-			},
-		})
-		// reset secret name to empty string, since multiple secrets will be created for each StatefulSet.
-		m.Spec.TLS.Certificates = kmapi.SetSecretNameForCertificate(m.Spec.TLS.Certificates, string(MongoDBServerCert), "")
-	} else {
-		m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
-			Alias:      string(MongoDBServerCert),
-			SecretName: m.CertificateName(MongoDBServerCert, ""),
-			Subject: &kmapi.X509Subject{
-				Organizations:       []string{DatabaseNamePrefix},
-				OrganizationalUnits: []string{string(MongoDBServerCert)},
-			},
-		})
-	}
-	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
-		Alias:      string(MongoDBClientCert),
-		SecretName: m.CertificateName(MongoDBClientCert, ""),
-		Subject: &kmapi.X509Subject{
-			Organizations:       []string{DatabaseNamePrefix},
-			OrganizationalUnits: []string{string(MongoDBClientCert)},
-		},
-	})
-	m.Spec.TLS.Certificates = kmapi.SetMissingSpecForCertificate(m.Spec.TLS.Certificates, kmapi.CertificateSpec{
-		Alias:      string(MongoDBMetricsExporterCert),
-		SecretName: m.CertificateName(MongoDBMetricsExporterCert, ""),
-		Subject: &kmapi.X509Subject{
-			Organizations:       []string{DatabaseNamePrefix},
-			OrganizationalUnits: []string{string(MongoDBMetricsExporterCert)},
-		},
-	})
-}
 func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion) []string {
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
