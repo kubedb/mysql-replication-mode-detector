@@ -22,6 +22,8 @@ import (
 	"os"
 	"strings"
 
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/cache"
@@ -116,9 +118,9 @@ func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
 
 func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-		delete(in.Labels, LabelRole)
+		delete(in.Labels, api.MySQLLabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
-			LabelRole: Primary,
+			api.MySQLLabelRole: api.MySQLPodPrimary,
 		})
 		return in
 	}, metav1.PatchOptions{})
@@ -127,9 +129,9 @@ func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 
 func (c *Controller) ensureSecondaryRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-		delete(pod.Labels, LabelRole)
+		delete(pod.Labels, api.MySQLLabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
-			LabelRole: Secondary,
+			api.MySQLLabelRole: api.MySQLPodSecondary,
 		})
 		return in
 	}, metav1.PatchOptions{})
