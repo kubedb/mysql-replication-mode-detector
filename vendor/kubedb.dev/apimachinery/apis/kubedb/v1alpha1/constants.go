@@ -16,37 +16,35 @@ limitations under the License.
 
 package v1alpha1
 
+import "kubedb.dev/apimachinery/apis/kubedb"
+
 const (
+	// Deprecated
 	DatabaseNamePrefix = "kubedb"
 
-	GenericKey = "kubedb.com"
+	KubeDBOrganization = "kubedb"
 
-	LabelDatabaseKind = GenericKey + "/kind"
-	LabelDatabaseName = GenericKey + "/name"
-	LabelRole         = GenericKey + "/role"
+	LabelDatabaseKind = kubedb.GroupName + "/kind"
+	LabelDatabaseName = kubedb.GroupName + "/name"
+	LabelRole         = kubedb.GroupName + "/role"
 
-	ComponentDatabase = "database"
-	RoleStats         = "stats"
-	DefaultStatsPath  = "/metrics"
+	ComponentDatabase     = "database"
+	RoleStats             = "stats"
+	DefaultStatsPath      = "/metrics"
+	DefaultPasswordLength = 16
 
-	PostgresKey      = ResourceSingularPostgres + "." + GenericKey
-	ElasticsearchKey = ResourceSingularElasticsearch + "." + GenericKey
-	MySQLKey         = ResourceSingularMySQL + "." + GenericKey
-	PerconaXtraDBKey = ResourceSingularPerconaXtraDB + "." + GenericKey
-	MongoDBKey       = ResourceSingularMongoDB + "." + GenericKey
-	RedisKey         = ResourceSingularRedis + "." + GenericKey
-	MemcachedKey     = ResourceSingularMemcached + "." + GenericKey
-	EtcdKey          = ResourceSingularEtcd + "." + GenericKey
-	ProxySQLKey      = ResourceSingularProxySQL + "." + GenericKey
-
-	AnnotationInitialized = GenericKey + "/initialized"
-	AnnotationJobType     = GenericKey + "/job-type"
+	PostgresKey      = ResourceSingularPostgres + "." + kubedb.GroupName
+	ElasticsearchKey = ResourceSingularElasticsearch + "." + kubedb.GroupName
+	MySQLKey         = ResourceSingularMySQL + "." + kubedb.GroupName
+	PerconaXtraDBKey = ResourceSingularPerconaXtraDB + "." + kubedb.GroupName
+	MongoDBKey       = ResourceSingularMongoDB + "." + kubedb.GroupName
+	RedisKey         = ResourceSingularRedis + "." + kubedb.GroupName
+	MemcachedKey     = ResourceSingularMemcached + "." + kubedb.GroupName
+	EtcdKey          = ResourceSingularEtcd + "." + kubedb.GroupName
+	ProxySQLKey      = ResourceSingularProxySQL + "." + kubedb.GroupName
 
 	PrometheusExporterPortNumber = 56790
 	PrometheusExporterPortName   = "prom-http"
-
-	JobTypeBackup  = "backup"
-	JobTypeRestore = "restore"
 
 	ElasticsearchRestPort                        = 9200
 	ElasticsearchRestPortName                    = "http"
@@ -138,4 +136,13 @@ const (
 	ContainerExporterName = "exporter"
 	LocalHost             = "localhost"
 	LocalHostIP           = "127.0.0.1"
+)
+
+const (
+	// Condition types
+	DatabaseInitialized = "Initialized"
+
+	// Condition reasons
+	DatabaseSuccessfullyInitialized = "SuccessfullyInitialized"
+	FailedToInitializeDatabase      = "FailedToInitialize"
 )
