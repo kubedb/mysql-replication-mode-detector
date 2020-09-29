@@ -3,7 +3,7 @@ module kubedb.dev/mysql-replication-mode-detector
 go 1.12
 
 require (
-	github.com/appscode/go v0.0.0-20200323182826-54e98e09185a
+	github.com/appscode/go v0.0.0-20200928211031-cc0c23082d91
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-xorm/xorm v0.7.9
 	github.com/spf13/cobra v1.0.0
@@ -13,7 +13,7 @@ require (
 	k8s.io/apiserver v0.18.9
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/klog v1.0.0
-	kmodules.xyz/client-go v0.0.0-20200928072851-0b8648a2b8b9
+	kmodules.xyz/client-go v0.0.0-20200929030759-cce6a3c623c1
 	kmodules.xyz/custom-resources v0.0.0-20200922210108-70f2815a43bb
 	kubedb.dev/apimachinery v0.14.0-beta.3.0.20200928202203-da9fbe5936cb
 )
