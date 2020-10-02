@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: proxysqlopsrequests.ops.kubedb.com
+  name: mariadbopsrequests.ops.kubedb.com
 spec:
   group: ops.kubedb.com
   names:
@@ -12,12 +12,12 @@ spec:
     - datastore
     - kubedb
     - appscode
-    kind: ProxySQLOpsRequest
-    listKind: ProxySQLOpsRequestList
-    plural: proxysqlopsrequests
+    kind: MariaDBOpsRequest
+    listKind: MariaDBOpsRequestList
+    plural: mariadbopsrequests
     shortNames:
-    - proxyops
-    singular: proxysqlopsrequest
+    - mariaops
+    singular: mariadbopsrequest
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -50,6 +50,13 @@ spec:
                     type: string
                 type: object
               horizontalScaling:
+                properties:
+                  member:
+                    format: int32
+                    type: integer
+                  memberWeight:
+                    format: int32
+                    type: integer
                 type: object
               restart:
                 type: object
@@ -163,7 +170,43 @@ spec:
                 type: object
               verticalScaling:
                 properties:
-                  readinessCriteria:
+                  exporter:
+                    properties:
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                    type: object
+                  mariadb:
+                    properties:
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
                     type: object
                 type: object
               volumeExpansion:
