@@ -76,13 +76,8 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 		return nil, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", api.MySQLRootPassword, podMeta.Namespace, podMeta.Name)
 	}
 
-	// get MySQL CR name from pod environment
-	mysqlName, ok := os.LookupEnv(api.MySQLName)
-	if !ok {
-		return nil, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", api.MySQLName, podMeta.Namespace, podMeta.Name)
-	}
-
-	my, err := c.dbClient.KubedbV1alpha1().MySQLs(podMeta.Namespace).Get(context.TODO(), mysqlName, metav1.GetOptions{})
+	// MySQL CR name have passed by flag. we can use to get MySQL CR
+	my, err := c.dbClient.KubedbV1alpha1().MySQLs(podMeta.Namespace).Get(context.TODO(), c.mysqlname, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}

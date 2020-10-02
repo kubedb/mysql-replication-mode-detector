@@ -45,6 +45,7 @@ type Controller struct {
 	maxNumRequeues int
 	numThreads     int
 	watchNamespace string
+	mysqlname      string
 
 	// selector for event-handler of MySQL Pod
 	selector labels.Selector
@@ -80,6 +81,7 @@ func NewLabelController(
 			api.LabelDatabaseName: mysqlName,
 		}),
 		watchNamespace: watchNamespace,
+		mysqlname:      mysqlName,
 	}
 }
 

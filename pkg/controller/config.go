@@ -17,11 +17,8 @@ limitations under the License.
 package controller
 
 import (
-	"fmt"
-	"os"
 	"time"
 
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -41,15 +38,10 @@ type Config struct {
 	MaxNumRequeues    int
 	NumThreads        int
 	WatchNamespace    string
+	MySQLName         string
 }
 
 func (c *Config) New() (*Controller, error) {
-	// get MySQL CR name from pod environment
-	mysqlName, ok := os.LookupEnv(api.MySQLName)
-	if !ok {
-		return nil, fmt.Errorf("missing value of %v variable in MySQL Pod", api.MySQLName)
-	}
-
 	ctrl := NewLabelController(
 		c.KubeInformerFactory,
 		c.ClientConfig,
@@ -58,7 +50,7 @@ func (c *Config) New() (*Controller, error) {
 		c.MaxNumRequeues,
 		c.NumThreads,
 		c.WatchNamespace,
-		mysqlName,
+		c.MySQLName,
 	)
 
 	ctrl.tweakListOptions = func(options *metav1.ListOptions) {
