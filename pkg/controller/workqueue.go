@@ -18,8 +18,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"strings"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -88,20 +86,7 @@ func (c *Controller) podLabeler(key string) error {
 }
 
 func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
-	user, ok := os.LookupEnv(KeyMySQLUser)
-	if !ok {
-		return false, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", KeyMySQLUser, podMeta.Namespace, podMeta.Name)
-	}
-	password, ok := os.LookupEnv(KeyMySQLPassword)
-	if !ok {
-		return false, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", KeyMySQLPassword, podMeta.Namespace, podMeta.Name)
-	}
-
-	// MySQL query to check master
-	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
-	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
-	WHERE VARIABLE_NAME='group_replication_primary_member';`
-	result, err := c.queryInMySQLDatabase(user, password, query)
+	result, err := c.queryInMySQLDatabase(podMeta)
 	if err != nil {
 		return false, err
 	}

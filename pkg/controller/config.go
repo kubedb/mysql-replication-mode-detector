@@ -17,21 +17,17 @@ limitations under the License.
 package controller
 
 import (
+	"fmt"
 	"os"
 	"time"
 
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-)
-
-const (
-	KeyMySQLUser     = "MYSQL_ROOT_USERNAME"
-	KeyMySQLPassword = "MYSQL_ROOT_PASSWORD"
-	DatabaseName     = "mysql"
 )
 
 type Config struct {
@@ -48,12 +44,11 @@ type Config struct {
 }
 
 func (c *Config) New() (*Controller, error) {
-	hostName, err := os.Hostname()
-	if err != nil {
-		return nil, err
+	// get MySQL CR name from pod environment
+	mysqlName, ok := os.LookupEnv(api.MySQLName)
+	if !ok {
+		return nil, fmt.Errorf("missing value of %v variable in MySQL Pod", api.MySQLName)
 	}
-	// get baseName(StatefulSet name) from pod name
-	baseName := hostName[:len(hostName)-2]
 
 	ctrl := NewLabelController(
 		c.KubeInformerFactory,
@@ -63,7 +58,7 @@ func (c *Config) New() (*Controller, error) {
 		c.MaxNumRequeues,
 		c.NumThreads,
 		c.WatchNamespace,
-		baseName,
+		mysqlName,
 	)
 
 	ctrl.tweakListOptions = func(options *metav1.ListOptions) {
