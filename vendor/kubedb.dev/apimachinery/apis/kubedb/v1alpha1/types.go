@@ -58,7 +58,7 @@ const (
 	// used for Databases for which data is currently restoring
 	DatabasePhaseDataRestoring DatabasePhase = "DataRestoring"
 	// used for Databases that are currently ReplicaReady, AcceptingConnection and Ready
-	DatabasePhaseRunning DatabasePhase = "Ready"
+	DatabasePhaseReady DatabasePhase = "Ready"
 	// used for Databases that can connect, ReplicaReady == false || Ready == false (eg, ES yellow)
 	DatabasePhaseCritical DatabasePhase = "Critical"
 	// used for Databases that can't connect
@@ -87,6 +87,6 @@ const (
 	TerminationPolicyDelete TerminationPolicy = "Delete"
 	// Deletes database pods, service, pvcs and stash backup data.
 	TerminationPolicyWipeOut TerminationPolicy = "WipeOut"
-	// Rejects attempt to delete database using ValidationWebhook. This replaces spec.doNotPause = true
+	// Rejects attempt to delete database using ValidationWebhook.
 	TerminationPolicyDoNotTerminate TerminationPolicy = "DoNotTerminate"
 )
