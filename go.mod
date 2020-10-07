@@ -3,7 +3,7 @@ module kubedb.dev/mysql-replication-mode-detector
 go 1.12
 
 require (
-	github.com/appscode/go v0.0.0-20200928211031-cc0c23082d91
+	github.com/appscode/go v0.0.0-20201006035845-a0302ac8e3d3
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-xorm/xorm v0.7.9
 	github.com/spf13/cobra v1.0.0
@@ -15,7 +15,7 @@ require (
 	k8s.io/klog v1.0.0
 	kmodules.xyz/client-go v0.0.0-20201007024140-3223988adf40
 	kmodules.xyz/custom-resources v0.0.0-20200922210108-70f2815a43bb
-	kubedb.dev/apimachinery v0.14.0-beta.3.0.20201007034409-8d2f606a6f64
+	kubedb.dev/apimachinery v0.14.0-beta.3.0.20201007105016-e562def953d6
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
