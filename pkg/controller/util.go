@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha1"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
