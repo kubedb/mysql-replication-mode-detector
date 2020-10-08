@@ -41,7 +41,7 @@ type Options struct {
 	NumThreads                  int
 
 	// MySQL CR name
-	MySQLName string
+	DBName string
 
 	StdOut io.Writer
 	StdErr io.Writer
@@ -70,7 +70,7 @@ func (o *Options) AddGoFlags(fs *flag.FlagSet) {
 	fs.DurationVar(&o.ResyncPeriod, "resync-period", o.ResyncPeriod, "If non-zero, will re-list this often. Otherwise, re-list will be delayed aslong as possible (until the upstream source closes the watch or times out.")
 
 	fs.BoolVar(&o.RestrictToOperatorNamespace, "restrict-to-operator-namespace", o.RestrictToOperatorNamespace, "If true, operator will only handle Kubernetes objects in its own namespace.")
-	fs.StringVar(&o.MySQLName, "my-name", o.MySQLName, "MySQL CR name")
+	fs.StringVar(&o.DBName, "db-name", o.DBName, "Database custom resource name")
 }
 
 func (o *Options) AddFlags(fs *pflag.FlagSet) {
@@ -95,7 +95,7 @@ func (o *Options) Apply(cfg *controller.Config) error {
 	cfg.MaxNumRequeues = o.MaxNumRequeues
 	cfg.NumThreads = o.NumThreads
 	cfg.WatchNamespace = o.WatchNamespace()
-	cfg.MySQLName = o.MySQLName
+	cfg.DBName = o.DBName
 
 	if cfg.KubeClient, err = kubernetes.NewForConfig(cfg.ClientConfig); err != nil {
 		return err

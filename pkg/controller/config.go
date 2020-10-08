@@ -38,7 +38,7 @@ type Config struct {
 	MaxNumRequeues    int
 	NumThreads        int
 	WatchNamespace    string
-	MySQLName         string
+	DBName            string
 }
 
 func (c *Config) New() (*Controller, error) {
@@ -50,7 +50,7 @@ func (c *Config) New() (*Controller, error) {
 		c.MaxNumRequeues,
 		c.NumThreads,
 		c.WatchNamespace,
-		c.MySQLName,
+		c.DBName,
 	)
 
 	ctrl.tweakListOptions = func(options *metav1.ListOptions) {

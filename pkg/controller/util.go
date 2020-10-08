@@ -77,7 +77,7 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 	}
 
 	// MySQL CR name have passed by flag. we can use to get MySQL CR
-	my, err := c.dbClient.KubedbV1alpha1().MySQLs(podMeta.Namespace).Get(context.TODO(), c.mysqlname, metav1.GetOptions{})
+	my, err := c.dbClient.KubedbV1alpha2().MySQLs(podMeta.Namespace).Get(context.TODO(), c.mysqlname, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}

@@ -66,7 +66,7 @@ func NewLabelController(
 	maxNumRequeues int,
 	numThreads int,
 	watchNamespace string,
-	mysqlName string,
+	dbName string,
 ) *Controller {
 	return &Controller{
 		kubeInformerFactory: kubeInformerFactory,
@@ -78,10 +78,10 @@ func NewLabelController(
 		numThreads:     numThreads,
 		selector: labels.SelectorFromSet(map[string]string{
 			api.LabelDatabaseKind: api.ResourceKindMySQL,
-			api.LabelDatabaseName: mysqlName,
+			api.LabelDatabaseName: dbName,
 		}),
 		watchNamespace: watchNamespace,
-		mysqlname:      mysqlName,
+		mysqlname:      dbName,
 	}
 }
 
