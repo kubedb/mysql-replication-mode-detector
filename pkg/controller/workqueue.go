@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -55,6 +56,10 @@ func (c *Controller) initWatcher() {
 }
 
 func (c *Controller) podLabeler(key string) error {
+	selfKey := fmt.Sprintf("%s/%s", c.namespace, c.podName)
+	if key != selfKey {
+		key = selfKey
+	}
 	klog.Infoln("Started processing, key:", key)
 	obj, exists, err := c.podInformer.GetIndexer().GetByKey(key)
 	if err != nil {
@@ -75,12 +80,13 @@ func (c *Controller) podLabeler(key string) error {
 			if err := c.ensurePrimaryRoleLabel(pod); err != nil {
 				return err
 			}
+			klog.Infof("Adding label: role=primary to Pod %s/%s has succeeded!!", pod.Namespace, pod.Name)
 		} else {
 			if err := c.ensureSecondaryRoleLabel(pod); err != nil {
 				return err
 			}
+			klog.Infof("Adding label: role=secondary to Pod %s/%s has succeeded!!", pod.Namespace, pod.Name)
 		}
-		klog.Infof("Set label as role(primary/secondary) in Pod %s/%s have succeeded!!", pod.Namespace, pod.Name)
 	}
 	return nil
 }
@@ -109,6 +115,7 @@ func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 		})
 		return in
 	}, metav1.PatchOptions{})
+
 	return err
 }
 

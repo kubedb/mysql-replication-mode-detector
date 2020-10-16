@@ -40,9 +40,7 @@ const (
 
 func (c *Controller) queryInMySQLDatabase(podMeta metav1.ObjectMeta) ([]map[string]string, error) {
 	// MySQL query to check master
-	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
-	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
-	WHERE VARIABLE_NAME='group_replication_primary_member';`
+	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members WHERE MEMBER_ROLE='PRIMARY';`
 
 	en, err := c.getMySQLClient(podMeta)
 	if err != nil {
@@ -77,7 +75,7 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 	}
 
 	// MySQL CR name have passed by flag. we can use to get MySQL CR
-	my, err := c.dbClient.KubedbV1alpha2().MySQLs(podMeta.Namespace).Get(context.TODO(), c.mysqlname, metav1.GetOptions{})
+	my, err := c.dbClient.KubedbV1alpha2().MySQLs(podMeta.Namespace).Get(context.TODO(), c.dbName, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +105,6 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 	}
 	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s?%s", user, password, api.LocalHost, api.MySQLNodePort, api.ResourceSingularMySQL, tlsConfig)
 	en, err := xorm.NewEngine("mysql", cnnstr)
-	en.ShowSQL()
 	return en, err
 }
 

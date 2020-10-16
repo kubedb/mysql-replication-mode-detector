@@ -70,7 +70,7 @@ func (o *Options) AddGoFlags(fs *flag.FlagSet) {
 	fs.DurationVar(&o.ResyncPeriod, "resync-period", o.ResyncPeriod, "If non-zero, will re-list this often. Otherwise, re-list will be delayed aslong as possible (until the upstream source closes the watch or times out.")
 
 	fs.BoolVar(&o.RestrictToOperatorNamespace, "restrict-to-operator-namespace", o.RestrictToOperatorNamespace, "If true, operator will only handle Kubernetes objects in its own namespace.")
-	fs.StringVar(&o.DBName, "db-name", o.DBName, "Database custom resource name")
+	fs.StringVar(&o.DBName, "db-name", o.DBName, "MySQL Database name")
 }
 
 func (o *Options) AddFlags(fs *pflag.FlagSet) {
