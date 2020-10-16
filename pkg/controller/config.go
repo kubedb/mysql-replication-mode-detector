@@ -17,7 +17,6 @@ limitations under the License.
 package controller
 
 import (
-	"os"
 	"time"
 
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
@@ -26,12 +25,6 @@ import (
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-)
-
-const (
-	KeyMySQLUser     = "MYSQL_ROOT_USERNAME"
-	KeyMySQLPassword = "MYSQL_ROOT_PASSWORD"
-	DatabaseName     = "mysql"
 )
 
 type Config struct {
@@ -45,16 +38,10 @@ type Config struct {
 	MaxNumRequeues    int
 	NumThreads        int
 	WatchNamespace    string
+	DBName            string
 }
 
 func (c *Config) New() (*Controller, error) {
-	hostName, err := os.Hostname()
-	if err != nil {
-		return nil, err
-	}
-	// get baseName(StatefulSet name) from pod name
-	baseName := hostName[:len(hostName)-2]
-
 	ctrl := NewLabelController(
 		c.KubeInformerFactory,
 		c.ClientConfig,
@@ -63,7 +50,7 @@ func (c *Config) New() (*Controller, error) {
 		c.MaxNumRequeues,
 		c.NumThreads,
 		c.WatchNamespace,
-		baseName,
+		c.DBName,
 	)
 
 	ctrl.tweakListOptions = func(options *metav1.ListOptions) {

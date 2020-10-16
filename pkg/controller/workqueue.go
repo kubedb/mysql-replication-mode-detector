@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -57,6 +56,10 @@ func (c *Controller) initWatcher() {
 }
 
 func (c *Controller) podLabeler(key string) error {
+	selfKey := fmt.Sprintf("%s/%s", c.namespace, c.podName)
+	if key != selfKey {
+		key = selfKey
+	}
 	klog.Infoln("Started processing, key:", key)
 	obj, exists, err := c.podInformer.GetIndexer().GetByKey(key)
 	if err != nil {
@@ -77,31 +80,19 @@ func (c *Controller) podLabeler(key string) error {
 			if err := c.ensurePrimaryRoleLabel(pod); err != nil {
 				return err
 			}
+			klog.Infof("Adding label: role=primary to Pod %s/%s has succeeded!!", pod.Namespace, pod.Name)
 		} else {
 			if err := c.ensureSecondaryRoleLabel(pod); err != nil {
 				return err
 			}
+			klog.Infof("Adding label: role=secondary to Pod %s/%s has succeeded!!", pod.Namespace, pod.Name)
 		}
-		klog.Infof("Set label as role(primary/secondary) in Pod %s/%s have succeeded!!", pod.Namespace, pod.Name)
 	}
 	return nil
 }
 
 func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
-	user, ok := os.LookupEnv(KeyMySQLUser)
-	if !ok {
-		return false, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", KeyMySQLUser, podMeta.Namespace, podMeta.Name)
-	}
-	password, ok := os.LookupEnv(KeyMySQLPassword)
-	if !ok {
-		return false, fmt.Errorf("missing value of %v variable in MySQL Pod %v/%v", KeyMySQLPassword, podMeta.Namespace, podMeta.Name)
-	}
-
-	// MySQL query to check master
-	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
-	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
-	WHERE VARIABLE_NAME='group_replication_primary_member';`
-	result, err := c.queryInMySQLDatabase(user, password, query)
+	result, err := c.queryInMySQLDatabase(podMeta)
 	if err != nil {
 		return false, err
 	}
@@ -124,6 +115,7 @@ func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 		})
 		return in
 	}, metav1.PatchOptions{})
+
 	return err
 }
 

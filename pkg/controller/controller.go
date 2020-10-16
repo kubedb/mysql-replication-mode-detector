@@ -17,6 +17,8 @@ limitations under the License.
 package controller
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -26,6 +28,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/informers"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	"k8s.io/client-go/kubernetes"
@@ -33,6 +36,7 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog"
+	"kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/tools/queue"
 )
 
@@ -45,6 +49,9 @@ type Controller struct {
 	maxNumRequeues int
 	numThreads     int
 	watchNamespace string
+	dbName         string
+	podName        string
+	namespace      string
 
 	// selector for event-handler of MySQL Pod
 	selector labels.Selector
@@ -65,7 +72,7 @@ func NewLabelController(
 	maxNumRequeues int,
 	numThreads int,
 	watchNamespace string,
-	baseName string,
+	dbName string,
 ) *Controller {
 	return &Controller{
 		kubeInformerFactory: kubeInformerFactory,
@@ -77,9 +84,12 @@ func NewLabelController(
 		numThreads:     numThreads,
 		selector: labels.SelectorFromSet(map[string]string{
 			api.LabelDatabaseKind: api.ResourceKindMySQL,
-			api.LabelDatabaseName: baseName,
+			api.LabelDatabaseName: dbName,
 		}),
 		watchNamespace: watchNamespace,
+		dbName:         dbName,
+		podName:        os.Getenv("POD_NAME"),
+		namespace:      meta.Namespace(),
 	}
 }
 
@@ -118,11 +128,24 @@ func (c *Controller) StartAndRunController(stopCh <-chan struct{}) {
 
 	c.Run(stopCh)
 
+	go c.requeuePeriodically(stopCh)
+
 	<-stopCh
 }
 
 // Run runs queue.worker
 func (c *Controller) Run(stopCh <-chan struct{}) {
 	c.podQueue.Run(stopCh)
+}
 
+func (c *Controller) requeuePeriodically(stopCh <-chan struct{}) {
+	err := wait.PollUntil(10*time.Second, func() (done bool, err error) {
+		c.podQueue.GetQueue().Add(fmt.Sprintf("%s/%s", c.namespace, c.podName))
+		return false, nil
+	},
+		stopCh,
+	)
+	if err != nil {
+		klog.Warningf("failed to requeue pod %s/%s. Reason: %v", c.namespace, c.podName, err)
+	}
 }
