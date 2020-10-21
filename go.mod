@@ -14,7 +14,7 @@ require (
 	k8s.io/apiserver v0.18.9
 	k8s.io/client-go v0.18.9
 	k8s.io/klog v1.0.0
-	kmodules.xyz/client-go v0.0.0-20201013083546-b17c1e15f1a3
+	kmodules.xyz/client-go v0.0.0-20201021051118-03dac1aea508
 	kmodules.xyz/custom-resources v0.0.0-20201008012351-6d8090f759d4
 	kubedb.dev/apimachinery v0.14.0-beta.3.0.20201020112044-47eaa48686c8
 )
