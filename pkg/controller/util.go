@@ -33,14 +33,11 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
-const (
-	TLSValueCustom     = "custom"
-	TLSValueSkipVerify = "skip-verify"
-)
-
 func (c *Controller) queryInMySQLDatabase(podMeta metav1.ObjectMeta) ([]map[string]string, error) {
 	// MySQL query to check master
-	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members WHERE MEMBER_ROLE='PRIMARY';`
+	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
+	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
+	WHERE VARIABLE_NAME='group_replication_primary_member';`
 
 	en, err := c.getMySQLClient(podMeta)
 	if err != nil {
@@ -92,15 +89,15 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 
 		// tls custom setup
 		if my.Spec.RequireSSL {
-			err = sql_driver.RegisterTLSConfig(TLSValueCustom, &tls.Config{
+			err = sql_driver.RegisterTLSConfig(api.MySQLTLSConfigCustom, &tls.Config{
 				RootCAs: certPool,
 			})
 			if err != nil {
 				return nil, err
 			}
-			tlsConfig = fmt.Sprintf("%s=%s", "tls", TLSValueCustom)
+			tlsConfig = fmt.Sprintf("tls=%s", api.MySQLTLSConfigCustom)
 		} else {
-			tlsConfig = fmt.Sprintf("%s=%s", "tls", TLSValueSkipVerify)
+			tlsConfig = fmt.Sprintf("tls=%s", api.MySQLTLSConfigSkipVerify)
 		}
 	}
 	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s?%s", user, password, api.LocalHost, api.MySQLDatabasePort, api.ResourceSingularMySQL, tlsConfig)
