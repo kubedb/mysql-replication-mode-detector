@@ -138,7 +138,7 @@ github.com/munnerz/goautoneg
 github.com/peterbourgon/diskv
 # github.com/pkg/errors v0.9.1
 github.com/pkg/errors
-# github.com/prometheus/client_golang v1.7.1 => github.com/prometheus/client_golang v1.7.1
+# github.com/prometheus/client_golang v1.6.0 => github.com/prometheus/client_golang v1.7.1
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
@@ -788,7 +788,7 @@ kmodules.xyz/monitoring-agent-api/api/v1
 kmodules.xyz/objectstore-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20200922211229-36acc531abab
 kmodules.xyz/offshoot-api/api/v1
-# kubedb.dev/apimachinery v0.14.0-beta.3.0.20201021175036-5f17e1b4bd32
+# kubedb.dev/apimachinery v0.14.0-beta.3.0.20201023043049-a57a7df5b78a
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/autoscaling
 kubedb.dev/apimachinery/apis/autoscaling/v1alpha1
