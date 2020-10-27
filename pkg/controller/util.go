@@ -103,7 +103,7 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 			tlsConfig = fmt.Sprintf("%s=%s", "tls", TLSValueSkipVerify)
 		}
 	}
-	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s?%s", user, password, api.LocalHost, api.MySQLNodePort, api.ResourceSingularMySQL, tlsConfig)
+	cnnstr := fmt.Sprintf("%v:%v@tcp(%s:%d)/%s?%s", user, password, api.LocalHost, api.MySQLDatabasePort, api.ResourceSingularMySQL, tlsConfig)
 	en, err := xorm.NewEngine("mysql", cnnstr)
 	return en, err
 }
