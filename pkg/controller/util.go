@@ -35,6 +35,9 @@ import (
 
 func (c *Controller) queryInMySQLDatabase(podMeta metav1.ObjectMeta) ([]map[string]string, error) {
 	// MySQL query to check master
+	// For version `8.*.*` the primary member information presents in `performance_schema.replication_group_members` table.
+	// However, it does not exit in `5.*.*`. The primary member information for `5.*.*` can be found in `performance_schema.global_status` table.
+	// Hence, we are joining both table so that the query works for the both versions.
 	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
 	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
 	WHERE VARIABLE_NAME='group_replication_primary_member';`
