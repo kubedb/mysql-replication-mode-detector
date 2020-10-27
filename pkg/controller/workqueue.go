@@ -82,7 +82,7 @@ func (c *Controller) podLabeler(key string) error {
 			}
 			klog.Infof("Adding label: role=primary to Pod %s/%s has succeeded!!", pod.Namespace, pod.Name)
 		} else {
-			if err := c.ensureSecondaryRoleLabel(pod); err != nil {
+			if err := c.ensureStandbyRoleLabel(pod); err != nil {
 				return err
 			}
 			klog.Infof("Adding label: role=secondary to Pod %s/%s has succeeded!!", pod.Namespace, pod.Name)
@@ -119,11 +119,11 @@ func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 	return err
 }
 
-func (c *Controller) ensureSecondaryRoleLabel(pod *core.Pod) error {
+func (c *Controller) ensureStandbyRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 		delete(pod.Labels, api.MySQLLabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
-			api.MySQLLabelRole: api.MySQLPodSecondary,
+			api.MySQLLabelRole: api.MySQLPodStandby,
 		})
 		return in
 	}, metav1.PatchOptions{})
