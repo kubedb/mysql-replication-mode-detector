@@ -40,7 +40,7 @@ func (c *Controller) queryInMySQLDatabase(podMeta metav1.ObjectMeta) ([]map[stri
 	// Hence, we are joining both table so that the query works for the both versions.
 	query := `SELECT MEMBER_HOST FROM performance_schema.replication_group_members
 	INNER JOIN performance_schema.global_status ON (MEMBER_ID = VARIABLE_VALUE)
-	WHERE VARIABLE_NAME='group_replication_primary_member';`
+	WHERE VARIABLE_NAME="group_replication_primary_member" AND MEMBER_STATE="ONLINE";`
 
 	en, err := c.getMySQLClient(podMeta)
 	if err != nil {

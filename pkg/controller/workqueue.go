@@ -25,6 +25,7 @@ import (
 
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -77,6 +78,9 @@ func (c *Controller) podLabeler(key string) error {
 			return err
 		}
 		if isPrimary {
+			if err := c.removeInvalidPrimaryLabel(c.dbName, pod); err != nil {
+				return err
+			}
 			if err := c.ensurePrimaryRoleLabel(pod); err != nil {
 				return err
 			}
@@ -109,7 +113,6 @@ func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
 
 func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-		delete(in.Labels, api.MySQLLabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
 			api.MySQLLabelRole: api.MySQLPodPrimary,
 		})
@@ -121,11 +124,42 @@ func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 
 func (c *Controller) ensureStandbyRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-		delete(pod.Labels, api.MySQLLabelRole)
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
 			api.MySQLLabelRole: api.MySQLPodStandby,
 		})
 		return in
 	}, metav1.PatchOptions{})
 	return err
+}
+
+func (c *Controller) removeInvalidPrimaryLabel(dbName string, primaryPod *core.Pod) error {
+	selector := labels.Set(getPodLabels(dbName))
+	c.podNamespaceLister.List(selector)
+	podList, err := c.kubeClient.CoreV1().Pods(primaryPod.Namespace).List(context.TODO(), metav1.ListOptions{
+		LabelSelector: selector,
+	})
+	if err != nil {
+		return err
+	}
+
+	for i := range podList.Items {
+		if primaryPod.Name != podList.Items[i].Name {
+			_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, &podList.Items[i], func(in *core.Pod) *core.Pod {
+				delete(in.Labels, api.MySQLLabelRole)
+				return in
+			}, metav1.PatchOptions{})
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func getPodLabels(name string) map[string]string {
+	return map[string]string{
+		api.LabelDatabaseName: name,
+		api.LabelDatabaseKind: api.ResourceKindMySQL,
+		api.MySQLLabelRole:    api.MySQLPodPrimary,
+	}
 }
