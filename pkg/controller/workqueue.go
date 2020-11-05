@@ -133,18 +133,13 @@ func (c *Controller) ensureStandbyRoleLabel(pod *core.Pod) error {
 }
 
 func (c *Controller) removeInvalidPrimaryLabel(dbName string, primaryPod *core.Pod) error {
-	selector := labels.Set(getPodLabels(dbName))
-	c.podNamespaceLister.List(selector)
-	podList, err := c.kubeClient.CoreV1().Pods(primaryPod.Namespace).List(context.TODO(), metav1.ListOptions{
-		LabelSelector: selector,
-	})
+	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(dbName)))
 	if err != nil {
 		return err
 	}
-
-	for i := range podList.Items {
-		if primaryPod.Name != podList.Items[i].Name {
-			_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, &podList.Items[i], func(in *core.Pod) *core.Pod {
+	for _, pod := range podList {
+		if primaryPod.Name != pod.Name {
+			_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 				delete(in.Labels, api.MySQLLabelRole)
 				return in
 			}, metav1.PatchOptions{})
@@ -156,7 +151,7 @@ func (c *Controller) removeInvalidPrimaryLabel(dbName string, primaryPod *core.P
 	return nil
 }
 
-func getPodLabels(name string) map[string]string {
+func getPrimaryLabels(name string) map[string]string {
 	return map[string]string{
 		api.LabelDatabaseName: name,
 		api.LabelDatabaseKind: api.ResourceKindMySQL,
