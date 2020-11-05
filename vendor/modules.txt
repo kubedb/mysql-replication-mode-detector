@@ -23,7 +23,6 @@ github.com/PuerkitoBio/urlesc
 github.com/appscode/go/flags
 github.com/appscode/go/runtime
 github.com/appscode/go/sets
-github.com/appscode/go/types
 github.com/appscode/go/version
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
@@ -70,7 +69,7 @@ github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 github.com/gogo/protobuf/sortkeys
 # github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 github.com/golang/glog
-# github.com/golang/protobuf v1.4.2 => github.com/golang/protobuf v1.3.2
+# github.com/golang/protobuf v1.4.3 => github.com/golang/protobuf v1.3.2
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
@@ -88,7 +87,7 @@ github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
 # github.com/google/gofuzz v1.1.0
 github.com/google/gofuzz
-# github.com/google/uuid v1.1.1
+# github.com/google/uuid v1.1.2
 github.com/google/uuid
 # github.com/googleapis/gnostic v0.4.0 => github.com/googleapis/gnostic v0.3.1
 github.com/googleapis/gnostic/OpenAPIv2
@@ -160,7 +159,7 @@ github.com/russross/blackfriday/v2
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
-# github.com/spf13/cobra v1.0.0
+# github.com/spf13/cobra v1.1.1
 github.com/spf13/cobra
 github.com/spf13/cobra/doc
 # github.com/spf13/pflag v1.0.5
@@ -269,6 +268,8 @@ golang.org/x/xerrors
 golang.org/x/xerrors/internal
 # gomodules.xyz/jsonpatch/v2 v2.1.0
 gomodules.xyz/jsonpatch/v2
+# gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
+gomodules.xyz/pointer
 # gomodules.xyz/version v0.1.0
 gomodules.xyz/version
 # google.golang.org/appengine v1.6.6
@@ -764,7 +765,7 @@ k8s.io/utils/net
 k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20201027113349-01a6d453d836
+# kmodules.xyz/client-go v0.0.0-20201105071625-0b277310b9b8
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
 kmodules.xyz/client-go/apiextensions
@@ -777,18 +778,18 @@ kmodules.xyz/client-go/logs
 kmodules.xyz/client-go/meta
 kmodules.xyz/client-go/tools/clientcmd
 kmodules.xyz/client-go/tools/queue
-# kmodules.xyz/custom-resources v0.0.0-20201008012351-6d8090f759d4
+# kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20201022103441-f51a42fb9ac8
+# kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/objectstore-api v0.0.0-20200922210707-59bab27e5d41
+# kmodules.xyz/objectstore-api v0.0.0-20201105133858-cbb2af88d50a
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20201027212804-f5e6dc573558
+# kmodules.xyz/offshoot-api v0.0.0-20201105074700-8675f5f686f2
 kmodules.xyz/offshoot-api/api/v1
-# kubedb.dev/apimachinery v0.14.1-0.20201030200006-92af33bde233
+# kubedb.dev/apimachinery v0.14.1-0.20201105213239-f74effb9db37
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/autoscaling
 kubedb.dev/apimachinery/apis/autoscaling/v1alpha1
