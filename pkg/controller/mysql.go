@@ -22,18 +22,19 @@ import (
 	"crypto/x509"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	_ "github.com/go-sql-driver/mysql"
-	sql_driver "github.com/go-sql-driver/mysql"
+	driver "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
-func (c *Controller) queryInMySQLDatabase(podMeta metav1.ObjectMeta) ([]map[string]string, error) {
+func (c *Controller) queryMySQLDatabase(podMeta metav1.ObjectMeta) ([]map[string]string, error) {
 	// MySQL query to check master
 	// For version `8.*.*` the primary member information presents in `performance_schema.replication_group_members` table.
 	// However, it does not exit in `5.*.*`. The primary member information for `5.*.*` can be found in `performance_schema.global_status` table.
@@ -92,7 +93,7 @@ func (c *Controller) getMySQLClient(podMeta metav1.ObjectMeta) (*xorm.Engine, er
 
 		// tls custom setup
 		if my.Spec.RequireSSL {
-			err = sql_driver.RegisterTLSConfig(api.MySQLTLSConfigCustom, &tls.Config{
+			err = driver.RegisterTLSConfig(api.MySQLTLSConfigCustom, &tls.Config{
 				RootCAs: certPool,
 			})
 			if err != nil {
@@ -115,4 +116,19 @@ func (c *Controller) eventuallyConnectWithMySQL(en *xorm.Engine) error {
 		}
 		return true, nil
 	})
+}
+
+func (c *Controller) isMySQLPrimary(podMeta metav1.ObjectMeta) (bool, error) {
+	result, err := c.queryMySQLDatabase(podMeta)
+	if err != nil {
+		return false, err
+	}
+
+	host := string(result[0]["MEMBER_HOST"])
+	hostName := strings.Split(host, ".")[0]
+
+	if hostName == podMeta.Name {
+		return true, nil
+	}
+	return false, nil
 }

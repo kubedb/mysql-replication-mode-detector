@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
@@ -78,7 +77,7 @@ func (c *Controller) podLabeler(key string) error {
 			return err
 		}
 		if isPrimary {
-			if err := c.removeInvalidPrimaryLabel(c.dbName, pod); err != nil {
+			if err := c.removeInvalidPrimaryLabel(pod); err != nil {
 				return err
 			}
 			if err := c.ensurePrimaryRoleLabel(pod); err != nil {
@@ -96,25 +95,20 @@ func (c *Controller) podLabeler(key string) error {
 }
 
 func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
-	result, err := c.queryInMySQLDatabase(podMeta)
-	if err != nil {
-		return false, err
+	switch c.dbKind {
+	case api.ResourceKindMySQL:
+		return c.isMySQLPrimary(podMeta)
+	case api.ResourceKindMongoDB:
+		return c.isMongoDBPrimary(podMeta)
+	default:
+		return false, nil
 	}
-
-	host := string(result[0]["MEMBER_HOST"])
-	hostName := strings.Split(host, ".")[0]
-
-	if hostName == podMeta.Name {
-		return true, nil
-	}
-
-	return false, nil
 }
 
 func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
-			api.MySQLLabelRole: api.MySQLPodPrimary,
+			api.LabelRole: api.DatabasePodPrimary,
 		})
 		return in
 	}, metav1.PatchOptions{})
@@ -125,22 +119,22 @@ func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
 func (c *Controller) ensureStandbyRoleLabel(pod *core.Pod) error {
 	_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
 		in.Labels = core_util.UpsertMap(in.Labels, map[string]string{
-			api.MySQLLabelRole: api.MySQLPodStandby,
+			api.LabelRole: api.DatabasePodStandby,
 		})
 		return in
 	}, metav1.PatchOptions{})
 	return err
 }
 
-func (c *Controller) removeInvalidPrimaryLabel(dbName string, primaryPod *core.Pod) error {
-	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(dbName)))
+func (c *Controller) removeInvalidPrimaryLabel(primaryPod *core.Pod) error {
+	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(c.dbName, c.dbKind)))
 	if err != nil {
 		return err
 	}
 	for _, pod := range podList {
 		if primaryPod.Name != pod.Name {
 			_, _, err := core_util.PatchPod(context.TODO(), c.kubeClient, pod, func(in *core.Pod) *core.Pod {
-				delete(in.Labels, api.MySQLLabelRole)
+				delete(in.Labels, api.LabelRole)
 				return in
 			}, metav1.PatchOptions{})
 			if err != nil {
@@ -151,10 +145,10 @@ func (c *Controller) removeInvalidPrimaryLabel(dbName string, primaryPod *core.P
 	return nil
 }
 
-func getPrimaryLabels(name string) map[string]string {
+func getPrimaryLabels(name, typ string) map[string]string {
 	return map[string]string{
 		api.LabelDatabaseName: name,
-		api.LabelDatabaseKind: api.ResourceKindMySQL,
-		api.MySQLLabelRole:    api.MySQLPodPrimary,
+		api.LabelDatabaseKind: typ,
+		api.LabelRole:         api.DatabasePodPrimary,
 	}
 }
