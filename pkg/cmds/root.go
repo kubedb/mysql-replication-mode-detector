@@ -34,7 +34,7 @@ import (
 
 func NewRootCmd() *cobra.Command {
 	var rootCmd = &cobra.Command{
-		Use:               "mysql-replication-mode-detector",
+		Use:               "replication-mode-detector",
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
 			flags.DumpAll(c.Flags())

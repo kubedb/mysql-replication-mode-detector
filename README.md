@@ -1,11 +1,11 @@
-[![Go Report Card](https://goreportcard.com/badge/kubedb.dev/mysql-replication-mode-detector)](https://goreportcard.com/report/kubedb.dev/mysql-replication-mode-detector)
-[![Build Status](https://github.com/kubedb/mysql-replication-mode-detector/workflows/CI/badge.svg)](https://github.com/kubedb/mysql-replication-mode-detector/actions?workflow=CI)
-[![codecov](https://codecov.io/gh/kubedb/mysql-replication-mode-detector/branch/master/graph/badge.svg)](https://codecov.io/gh/kubedb/mysql-replication-mode-detector)
+[![Go Report Card](https://goreportcard.com/badge/kubedb.dev/replication-mode-detector)](https://goreportcard.com/report/kubedb.dev/replication-mode-detector)
+[![Build Status](https://github.com/kubedb/replication-mode-detector/workflows/CI/badge.svg)](https://github.com/kubedb/replication-mode-detector/actions?workflow=CI)
+[![codecov](https://codecov.io/gh/kubedb/replication-mode-detector/branch/master/graph/badge.svg)](https://codecov.io/gh/kubedb/replication-mode-detector)
 [![Slack](http://slack.kubernetes.io/badge.svg)](http://slack.kubernetes.io/#kubedb)
 [![mailing list](https://img.shields.io/badge/mailing_list-join-blue.svg)](https://groups.google.com/forum/#!forum/kubedb)
 [![Twitter](https://img.shields.io/twitter/follow/kubedb.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/intent/follow?screen_name=kubedb)
 
-# mysql-replication-mode-detector
+# replication-mode-detector
 Detects and applies labels to MySQL primary and seconday nodes.
 
 ## Installation

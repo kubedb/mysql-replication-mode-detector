@@ -19,7 +19,7 @@ package main
 import (
 	"log"
 
-	"kubedb.dev/mysql-replication-mode-detector/pkg/cmds"
+	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
 	"kmodules.xyz/client-go/logs"
 )

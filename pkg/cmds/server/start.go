@@ -17,7 +17,7 @@ limitations under the License.
 package server
 
 import (
-	"kubedb.dev/mysql-replication-mode-detector/pkg/controller"
+	"kubedb.dev/replication-mode-detector/pkg/controller"
 
 	"kmodules.xyz/client-go/tools/clientcmd"
 )

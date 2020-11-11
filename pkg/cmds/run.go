@@ -19,7 +19,7 @@ package cmds
 import (
 	"io"
 
-	"kubedb.dev/mysql-replication-mode-detector/pkg/cmds/server"
+	"kubedb.dev/replication-mode-detector/pkg/cmds/server"
 
 	"github.com/spf13/cobra"
 	"k8s.io/klog"
