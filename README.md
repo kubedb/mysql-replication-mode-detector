@@ -6,7 +6,7 @@
 [![Twitter](https://img.shields.io/twitter/follow/kubedb.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/intent/follow?screen_name=kubedb)
 
 # replication-mode-detector
-Detects and applies labels to MySQL primary and seconday nodes.
+Detects and applies labels to Database (Currently MongoDB and MySQL) primary and secondary nodes.
 
 ## Installation
 To install KubeDB, please follow the guide [here](https://kubedb.com/docs/latest/setup/install/).

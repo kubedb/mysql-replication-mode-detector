@@ -30,10 +30,10 @@ func NewCmdRun(out, errOut io.Writer, stopCh <-chan struct{}) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:               "run",
-		Short:             "Launch MySQL Pod Labeler",
+		Short:             "Launch Database Pod Labeler",
 		DisableAutoGenTag: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			klog.Infoln("Starting mysql Pod Labeler...")
+			klog.Infoln("Starting database Pod Labeler...")
 
 			if err := o.Complete(); err != nil {
 				return err

@@ -39,6 +39,7 @@ type Config struct {
 	NumThreads        int
 	WatchNamespace    string
 	DBName            string
+	DBType            string
 }
 
 func (c *Config) New() (*Controller, error) {
@@ -51,6 +52,7 @@ func (c *Config) New() (*Controller, error) {
 		c.NumThreads,
 		c.WatchNamespace,
 		c.DBName,
+		c.DBType,
 	)
 
 	ctrl.tweakListOptions = func(options *metav1.ListOptions) {

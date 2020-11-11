@@ -51,14 +51,15 @@ type Controller struct {
 	watchNamespace string
 	dbName         string
 	podName        string
+	dbType         string
 	namespace      string
 
-	// selector for event-handler of MySQL Pod
+	// selector for event-handler of Database Pod
 	selector labels.Selector
 	// tweakListOptions for watcher
 	tweakListOptions func(*metav1.ListOptions)
 
-	// MySQL Pod
+	// Database Pod
 	podQueue           *queue.Worker
 	podInformer        cache.SharedIndexInformer
 	podNamespaceLister corelisters.PodNamespaceLister
@@ -73,6 +74,7 @@ func NewLabelController(
 	numThreads int,
 	watchNamespace string,
 	dbName string,
+	dbType string,
 ) *Controller {
 	return &Controller{
 		kubeInformerFactory: kubeInformerFactory,
@@ -83,11 +85,12 @@ func NewLabelController(
 		maxNumRequeues: maxNumRequeues,
 		numThreads:     numThreads,
 		selector: labels.SelectorFromSet(map[string]string{
-			api.LabelDatabaseKind: api.ResourceKindMySQL,
+			api.LabelDatabaseKind: dbType,
 			api.LabelDatabaseName: dbName,
 		}),
 		watchNamespace: watchNamespace,
 		dbName:         dbName,
+		dbType:         dbType,
 		podName:        os.Getenv("POD_NAME"),
 		namespace:      meta.Namespace(),
 	}

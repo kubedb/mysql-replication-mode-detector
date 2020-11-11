@@ -411,3 +411,8 @@ release:
 .PHONY: clean
 clean:
 	rm -rf .go bin
+
+push-to-kind: container
+	@echo "Loading docker image into kind cluster...."
+	@kind load docker-image $(IMAGE):$(TAG)
+	@echo "Image has been pushed successfully into kind cluster."
