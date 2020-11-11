@@ -16,7 +16,7 @@ SHELL=/bin/bash -o pipefail
 
 GO_PKG   := kubedb.dev
 REPO     := $(notdir $(shell pwd))
-BIN      := mysql-replication-mode-detector
+BIN      := replication-mode-detector
 COMPRESS ?= no
 
 # Where to push the docker image.

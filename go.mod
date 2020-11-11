@@ -1,4 +1,4 @@
-module kubedb.dev/mysql-replication-mode-detector
+module kubedb.dev/replication-mode-detector
 
 go 1.12
 

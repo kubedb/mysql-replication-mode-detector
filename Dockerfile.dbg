@@ -14,7 +14,7 @@
 
 FROM {ARG_FROM}
 
-LABEL org.opencontainers.image.source https://github.com/kubedb/mysql-replication-mode-detector
+LABEL org.opencontainers.image.source https://github.com/kubedb/replication-mode-detector
 
 ADD bin/{ARG_BIN}-{ARG_OS}-{ARG_ARCH} /{ARG_BIN}
 

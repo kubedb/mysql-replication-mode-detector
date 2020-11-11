@@ -21,7 +21,7 @@ import (
 	"log"
 	"os"
 
-	"kubedb.dev/mysql-replication-mode-detector/pkg/cmds"
+	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
 	"github.com/spf13/cobra/doc"
 	"gomodules.xyz/runtime"
