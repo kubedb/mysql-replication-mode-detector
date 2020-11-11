@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
@@ -96,23 +95,14 @@ func (c *Controller) podLabeler(key string) error {
 }
 
 func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
-	if c.dbType == api.ResourceKindMySQL {
-		result, err := c.queryInMySQLDatabase(podMeta)
-		if err != nil {
-			return false, err
-		}
-
-		host := string(result[0]["MEMBER_HOST"])
-		hostName := strings.Split(host, ".")[0]
-
-		if hostName == podMeta.Name {
-			return true, nil
-		}
-	} else if c.dbType == api.ResourceKindMongoDB {
-		return c.IsMaster(podMeta)
+	switch c.dbKind {
+	case api.ResourceKindMySQL:
+		return c.isMySQLPrimary(podMeta)
+	case api.ResourceKindMongoDB:
+		return c.isMongoDBPrimary(podMeta)
+	default:
+		return false, nil
 	}
-
-	return false, nil
 }
 
 func (c *Controller) ensurePrimaryRoleLabel(pod *core.Pod) error {
@@ -137,7 +127,7 @@ func (c *Controller) ensureStandbyRoleLabel(pod *core.Pod) error {
 }
 
 func (c *Controller) removeInvalidPrimaryLabel(primaryPod *core.Pod) error {
-	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(c.dbName, c.dbType)))
+	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(c.dbName, c.dbKind)))
 	if err != nil {
 		return err
 	}

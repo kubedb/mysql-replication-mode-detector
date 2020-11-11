@@ -51,7 +51,7 @@ type Controller struct {
 	watchNamespace string
 	dbName         string
 	podName        string
-	dbType         string
+	dbKind         string
 	namespace      string
 
 	// selector for event-handler of Database Pod
@@ -74,7 +74,7 @@ func NewLabelController(
 	numThreads int,
 	watchNamespace string,
 	dbName string,
-	dbType string,
+	dbKind string,
 ) *Controller {
 	return &Controller{
 		kubeInformerFactory: kubeInformerFactory,
@@ -85,12 +85,12 @@ func NewLabelController(
 		maxNumRequeues: maxNumRequeues,
 		numThreads:     numThreads,
 		selector: labels.SelectorFromSet(map[string]string{
-			api.LabelDatabaseKind: dbType,
+			api.LabelDatabaseKind: dbKind,
 			api.LabelDatabaseName: dbName,
 		}),
 		watchNamespace: watchNamespace,
 		dbName:         dbName,
-		dbType:         dbType,
+		dbKind:         dbKind,
 		podName:        os.Getenv("POD_NAME"),
 		namespace:      meta.Namespace(),
 	}

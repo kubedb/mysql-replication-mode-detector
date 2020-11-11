@@ -43,7 +43,7 @@ type Options struct {
 	// Database CR name
 	DBName string
 	// Database Resource Kind
-	DBType string
+	DBKind string
 
 	StdOut io.Writer
 	StdErr io.Writer
@@ -73,7 +73,7 @@ func (o *Options) AddGoFlags(fs *flag.FlagSet) {
 
 	fs.BoolVar(&o.RestrictToOperatorNamespace, "restrict-to-operator-namespace", o.RestrictToOperatorNamespace, "If true, operator will only handle Kubernetes objects in its own namespace.")
 	fs.StringVar(&o.DBName, "db-name", o.DBName, "Database name")
-	fs.StringVar(&o.DBType, "db-type", o.DBType, "Database type (resource kind)")
+	fs.StringVar(&o.DBKind, "db-kind", o.DBKind, "Database resource kind (eg, MongoDB, MySQL)")
 }
 
 func (o *Options) AddFlags(fs *pflag.FlagSet) {
@@ -99,7 +99,7 @@ func (o *Options) Apply(cfg *controller.Config) error {
 	cfg.NumThreads = o.NumThreads
 	cfg.WatchNamespace = o.WatchNamespace()
 	cfg.DBName = o.DBName
-	cfg.DBType = o.DBType
+	cfg.DBKind = o.DBKind
 
 	if cfg.KubeClient, err = kubernetes.NewForConfig(cfg.ClientConfig); err != nil {
 		return err
