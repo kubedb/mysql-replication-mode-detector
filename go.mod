@@ -18,7 +18,7 @@ require (
 	k8s.io/kubernetes v1.18.9
 	kmodules.xyz/client-go v0.0.0-20201105071625-0b277310b9b8
 	kmodules.xyz/custom-resources v0.0.0-20201105075444-3c6af51b4f79
-	kubedb.dev/apimachinery v0.15.2-0.20201117210058-03a5a9a72f49
+	kubedb.dev/apimachinery v0.15.2-0.20201122170734-a022a50249dc
 )
 
 replace bitbucket.org/ww/goautoneg => gomodules.xyz/goautoneg v0.0.0-20120707110453-a547fc61f48d
