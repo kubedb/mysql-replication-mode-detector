@@ -117,6 +117,13 @@ func (c *Controller) isMongoDBPrimary(podMeta metav1.ObjectMeta) (bool, error) {
 		return false, err
 	}
 
+	defer func() {
+		err := client.Disconnect(context.TODO())
+		if err != nil {
+			log.Error(err)
+		}
+	}()
+
 	res := make(map[string]interface{})
 
 	err = client.Database("admin").RunCommand(context.Background(), bson.D{{Key: "isMaster", Value: "1"}}).Decode(&res)
