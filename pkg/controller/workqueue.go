@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
@@ -28,6 +29,7 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog"
 	core_util "kmodules.xyz/client-go/core/v1"
+	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/tools/queue"
 )
 
@@ -95,10 +97,10 @@ func (c *Controller) podLabeler(key string) error {
 }
 
 func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
-	switch c.dbKind {
-	case api.ResourceKindMySQL:
+	switch c.dbFQN {
+	case api.MySQL{}.ResourceFQN():
 		return c.isMySQLPrimary(podMeta)
-	case api.ResourceKindMongoDB:
+	case api.MongoDB{}.ResourceFQN():
 		return c.isMongoDBPrimary(podMeta)
 	default:
 		return false, nil
@@ -127,7 +129,7 @@ func (c *Controller) ensureStandbyRoleLabel(pod *core.Pod) error {
 }
 
 func (c *Controller) removeInvalidPrimaryLabel(primaryPod *core.Pod) error {
-	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(c.dbName, c.dbKind)))
+	podList, err := c.podNamespaceLister.List(labels.SelectorFromSet(getPrimaryLabels(c.dbName, c.dbFQN)))
 	if err != nil {
 		return err
 	}
@@ -145,10 +147,11 @@ func (c *Controller) removeInvalidPrimaryLabel(primaryPod *core.Pod) error {
 	return nil
 }
 
-func getPrimaryLabels(name, typ string) map[string]string {
+func getPrimaryLabels(name, fqn string) map[string]string {
 	return map[string]string{
-		api.LabelDatabaseName: name,
-		api.LabelDatabaseKind: typ,
-		api.LabelRole:         api.DatabasePodPrimary,
+		meta_util.NameLabelKey:      fqn,
+		meta_util.InstanceLabelKey:  name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+		api.LabelRole:               api.DatabasePodPrimary,
 	}
 }

@@ -21,7 +21,7 @@ import (
 	"os"
 	"time"
 
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	corev1 "k8s.io/api/core/v1"
@@ -37,6 +37,7 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog"
 	"kmodules.xyz/client-go/meta"
+	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/tools/queue"
 )
 
@@ -51,7 +52,7 @@ type Controller struct {
 	watchNamespace string
 	dbName         string
 	podName        string
-	dbKind         string
+	dbFQN          string
 	namespace      string
 
 	// selector for event-handler of Database Pod
@@ -74,7 +75,7 @@ func NewLabelController(
 	numThreads int,
 	watchNamespace string,
 	dbName string,
-	dbKind string,
+	dbFQN string,
 ) *Controller {
 	return &Controller{
 		kubeInformerFactory: kubeInformerFactory,
@@ -85,12 +86,13 @@ func NewLabelController(
 		maxNumRequeues: maxNumRequeues,
 		numThreads:     numThreads,
 		selector: labels.SelectorFromSet(map[string]string{
-			api.LabelDatabaseKind: dbKind,
-			api.LabelDatabaseName: dbName,
+			meta_util.NameLabelKey:      dbFQN,
+			meta_util.InstanceLabelKey:  dbName,
+			meta_util.ManagedByLabelKey: kubedb.GroupName,
 		}),
 		watchNamespace: watchNamespace,
 		dbName:         dbName,
-		dbKind:         dbKind,
+		dbFQN:          dbFQN,
 		podName:        os.Getenv("POD_NAME"),
 		namespace:      meta.Namespace(),
 	}
