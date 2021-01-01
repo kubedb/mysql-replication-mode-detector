@@ -17,14 +17,19 @@ limitations under the License.
 package controller
 
 import (
+	"fmt"
 	"time"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/discovery/cached/memory"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/restmapper"
 )
 
 type Config struct {
@@ -43,6 +48,15 @@ type Config struct {
 }
 
 func (c *Config) New() (*Controller, error) {
+	mapper := restmapper.NewDeferredDiscoveryRESTMapper(memory.NewMemCacheClient(c.KubeClient.Discovery()))
+	mapping, err := mapper.RESTMapping(schema.GroupKind{
+		Group: kubedb.GroupName,
+		Kind:  c.DBKind,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	ctrl := NewLabelController(
 		c.KubeInformerFactory,
 		c.ClientConfig,
@@ -52,7 +66,7 @@ func (c *Config) New() (*Controller, error) {
 		c.NumThreads,
 		c.WatchNamespace,
 		c.DBName,
-		c.DBKind,
+		fmt.Sprintf("%s.%s", mapping.Resource.Resource, mapping.Resource.Group),
 	)
 
 	ctrl.tweakListOptions = func(options *metav1.ListOptions) {
