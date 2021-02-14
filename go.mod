@@ -16,7 +16,7 @@ require (
 	k8s.io/client-go v0.18.9
 	k8s.io/klog v1.0.0
 	k8s.io/kubernetes v1.18.9
-	kmodules.xyz/client-go v0.0.0-20210118094617-273ba20ad7ca
+	kmodules.xyz/client-go v0.0.0-20210213000708-f480974ce46d
 	kmodules.xyz/custom-resources v0.0.0-20201124062543-bd8d35c21b0c
 	kubedb.dev/apimachinery v0.16.2
 )
