@@ -122,10 +122,23 @@ func (c *Controller) isMySQLPrimary(podMeta metav1.ObjectMeta) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-
 	host := string(result[0]["MEMBER_HOST"])
-	hostName := strings.Split(host, ".")[0]
+	// the pod will be primary if
+	// 1. the status.podIP and host are same or
+	// 2. the pod name and host(DNS) are same
 
+	// compare podIP and host
+	pod, err := c.kubeClient.CoreV1().Pods(podMeta.Namespace).Get(context.TODO(), podMeta.Name, metav1.GetOptions{})
+	if err != nil {
+		return false, err
+	}
+	podIP := pod.Status.PodIP
+	if strings.Compare(podIP, host) == 0 {
+		return true, nil
+	}
+
+	// compare pod name and host(DNS 1st part)
+	hostName := strings.Split(host, ".")[0]
 	if hostName == podMeta.Name {
 		return true, nil
 	}
