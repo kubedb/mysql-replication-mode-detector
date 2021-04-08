@@ -30,6 +30,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	driver "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
@@ -117,29 +118,32 @@ func (c *Controller) eventuallyConnectWithMySQL(en *xorm.Engine) error {
 	})
 }
 
-func (c *Controller) isMySQLPrimary(podMeta metav1.ObjectMeta) (bool, error) {
-	result, err := c.queryMySQLDatabase(podMeta)
+func (c *Controller) isMySQLPrimary(pod *core.Pod) (bool, error) {
+	result, err := c.queryMySQLDatabase(pod.ObjectMeta)
 	if err != nil {
 		return false, err
 	}
-	host := string(result[0]["MEMBER_HOST"])
+	host := result[0]["MEMBER_HOST"]
 	// the pod will be primary if
 	// 1. the status.podIP and host are same or
 	// 2. the pod name and host(DNS) are same
 
 	// compare podIP and host
-	pod, err := c.kubeClient.CoreV1().Pods(podMeta.Namespace).Get(context.TODO(), podMeta.Name, metav1.GetOptions{})
-	if err != nil {
-		return false, err
+	addrs := pod.Status.PodIPs
+	if len(addrs) > 0 {
+		addrs = []core.PodIP{
+			{IP: pod.Status.PodIP},
+		}
 	}
-	podIP := pod.Status.PodIP
-	if strings.Compare(podIP, host) == 0 {
-		return true, nil
+	for _, addr := range addrs {
+		if addr.IP == host {
+			return true, nil
+		}
 	}
 
 	// compare pod name and host(DNS 1st part)
 	hostName := strings.Split(host, ".")[0]
-	if hostName == podMeta.Name {
+	if hostName == pod.Name {
 		return true, nil
 	}
 	return false, nil
