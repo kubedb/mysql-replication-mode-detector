@@ -74,7 +74,7 @@ func (c *Controller) podLabeler(key string) error {
 	} else {
 		pod := obj.(*core.Pod).DeepCopy()
 
-		isPrimary, err := c.checkPrimary(pod.ObjectMeta)
+		isPrimary, err := c.checkPrimary(pod)
 		if err != nil {
 			return err
 		}
@@ -96,12 +96,12 @@ func (c *Controller) podLabeler(key string) error {
 	return nil
 }
 
-func (c *Controller) checkPrimary(podMeta metav1.ObjectMeta) (bool, error) {
+func (c *Controller) checkPrimary(pod *core.Pod) (bool, error) {
 	switch c.dbFQN {
 	case api.MySQL{}.ResourceFQN():
-		return c.isMySQLPrimary(podMeta)
+		return c.isMySQLPrimary(pod)
 	case api.MongoDB{}.ResourceFQN():
-		return c.isMongoDBPrimary(podMeta)
+		return c.isMongoDBPrimary(pod.ObjectMeta)
 	default:
 		return false, nil
 	}
