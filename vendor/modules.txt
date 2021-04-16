@@ -819,7 +819,7 @@ k8s.io/utils/net
 k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# kmodules.xyz/client-go v0.0.0-20210313172452-3345a02bec66
+# kmodules.xyz/client-go v0.0.0-20210415071346-d5cb3228d022
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
 kmodules.xyz/client-go/apiextensions
@@ -842,7 +842,7 @@ kmodules.xyz/custom-resources/crds
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/offshoot-api v0.0.0-20210308072215-581e7685cd02
 kmodules.xyz/offshoot-api/api/v1
-# kubedb.dev/apimachinery v0.17.2-0.20210408165938-264c08724aab
+# kubedb.dev/apimachinery v0.18.0
 kubedb.dev/apimachinery/apis
 kubedb.dev/apimachinery/apis/autoscaling
 kubedb.dev/apimachinery/apis/autoscaling/v1alpha1
