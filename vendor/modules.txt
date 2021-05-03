@@ -860,7 +860,7 @@ k8s.io/component-base/version
 k8s.io/klog
 # k8s.io/klog/v2 v2.8.0
 k8s.io/klog/v2
-# k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7 => k8s.io/kube-openapi v0.0.0-20201113171705-d219536bb9fd
+# k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7 => k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
 k8s.io/kube-openapi/pkg/builder
 k8s.io/kube-openapi/pkg/common
 k8s.io/kube-openapi/pkg/handler
@@ -897,9 +897,9 @@ kmodules.xyz/custom-resources/apis/metrics
 kmodules.xyz/custom-resources/apis/metrics/v1alpha1
 kmodules.xyz/custom-resources/client/clientset/versioned/scheme
 kmodules.xyz/custom-resources/crds
-# kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a
+# kmodules.xyz/monitoring-agent-api v0.0.0-20210503020053-730829ef4ddb
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/offshoot-api v0.0.0-20210308072215-581e7685cd02
+# kmodules.xyz/offshoot-api v0.0.0-20210502215616-234104e66819
 kmodules.xyz/offshoot-api/api/v1
 # kubedb.dev/apimachinery v0.18.0
 kubedb.dev/apimachinery/apis
