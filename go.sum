@@ -1746,14 +1746,12 @@ kmodules.xyz/custom-resources v0.0.0-20210222100152-7426e3678989/go.mod h1:/r3/e
 kmodules.xyz/custom-resources v0.0.0-20210222235834-b3f8dc56b6a3/go.mod h1:/r3/eJ3LIfwGyBEVaobqUZRZGh7GJv5RJojj/bdD14Q=
 kmodules.xyz/custom-resources v0.0.0-20210502220303-115fa584b8d1 h1:pYyOznZwcuj/f+NBn6qqacZppkCfYf8IV6SgIj+gWBo=
 kmodules.xyz/custom-resources v0.0.0-20210502220303-115fa584b8d1/go.mod h1:Hj1c6EkMD8FdSMQ1XVpZfV3MgEMU1/gKv6mwCRt1PD8=
+kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a h1:3uwHtoj4msqYEoAJ7lyS7z3OFeQPF9v3J4Iv8shs86U=
 kmodules.xyz/monitoring-agent-api v0.0.0-20201105074044-be7a1044891a/go.mod h1:r8b8lckYt5Gc5tiF3NSBPJmUrxPILerNRdozcaX7grI=
-kmodules.xyz/monitoring-agent-api v0.0.0-20210503020053-730829ef4ddb h1:T37d3sf0IcKDMbgPPrKyhKfhizocynEsg/ijZH+efCo=
-kmodules.xyz/monitoring-agent-api v0.0.0-20210503020053-730829ef4ddb/go.mod h1:BSMsuOgoGWSyVAHb0GAxriLOAmLrtFCed7Q6ctCSPeQ=
 kmodules.xyz/objectstore-api v0.0.0-20210218144135-bfabb80e0362/go.mod h1:87wP8pKn5ICyQcbK+w+4Jlx5JQy/+mkDGj7T/Qnfrpk=
 kmodules.xyz/offshoot-api v0.0.0-20210218144050-e1d794cb382a/go.mod h1:RMHLigHILAk04wMAuMqBerskKdWlLyjqb0zLLL68cBM=
+kmodules.xyz/offshoot-api v0.0.0-20210308072215-581e7685cd02 h1:dJStGXDaR8jwYNWi+RQfetds/hpH8lBvBEaZ4cpJ16U=
 kmodules.xyz/offshoot-api v0.0.0-20210308072215-581e7685cd02/go.mod h1:RMHLigHILAk04wMAuMqBerskKdWlLyjqb0zLLL68cBM=
-kmodules.xyz/offshoot-api v0.0.0-20210502215616-234104e66819 h1:+4326iQRjsOQn9/kHwRBQD8W2+RSrrQeRWnbDA9J3L8=
-kmodules.xyz/offshoot-api v0.0.0-20210502215616-234104e66819/go.mod h1:r5oLsdmy3qkC8HPwoaATVjp5EmDmwZ09u2H6uQ03D8o=
 kmodules.xyz/openshift v0.0.0-20201105073146-0da509a7d39f/go.mod h1:vFwB/f5rVH5QoKXb/MN5xndDzYbmip2N8Zn68wgywlk=
 kmodules.xyz/prober v0.0.0-20210218144026-43e923722d81/go.mod h1:2eN8X5Wq7/AAgE5AWMAX8T0lE51HZiYEldG2RQuouX4=
 kmodules.xyz/webhook-runtime v0.0.0-20201105073856-2dc7382b88c6/go.mod h1:xLgewoOzwR5ZrVOHQ2SR0P4E7tgCyBWbYlUawEXgeF4=
