@@ -17,8 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"log"
-
+	"k8s.io/klog/v2"
 	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
 	"kmodules.xyz/client-go/logs"
@@ -28,6 +27,6 @@ func main() {
 	logs.InitLogs()
 	defer logs.FlushLogs()
 	if err := cmds.NewRootCmd().Execute(); err != nil {
-		log.Fatal(err)
+		klog.Fatal(err)
 	}
 }

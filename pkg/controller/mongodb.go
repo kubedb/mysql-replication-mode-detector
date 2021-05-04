@@ -26,8 +26,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	mgoptions "go.mongodb.org/mongo-driver/mongo/options"
-	"gomodules.xyz/x/log"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/klog/v2"
 	"k8s.io/kubernetes/pkg/apis/core"
 	"kmodules.xyz/client-go/tools/certholder"
 )
@@ -52,7 +52,7 @@ func (c *Controller) GetMongoDBClientOpts(url string, db *api.MongoDB) (*mgoptio
 		secretName := db.GetCertSecretName(api.MongoDBClientCert, "")
 		certSecret, err := c.kubeClient.CoreV1().Secrets(db.Namespace).Get(context.TODO(), secretName, metav1.GetOptions{})
 		if err != nil {
-			log.Error(err, "failed to get certificate secret", "Secret", secretName)
+			klog.Error(err, "failed to get certificate secret", "Secret", secretName)
 			return nil, err
 		}
 
@@ -60,7 +60,7 @@ func (c *Controller) GetMongoDBClientOpts(url string, db *api.MongoDB) (*mgoptio
 			ForResource(api.SchemeGroupVersion.WithResource(api.ResourcePluralMongoDB), db.ObjectMeta)
 		_, err = certs.Save(certSecret)
 		if err != nil {
-			log.Error(err, "failed to save certificate")
+			klog.Error(err, "failed to save certificate")
 			return nil, err
 		}
 
@@ -120,7 +120,7 @@ func (c *Controller) isMongoDBPrimary(podMeta metav1.ObjectMeta) (bool, error) {
 	defer func() {
 		err := client.Disconnect(context.TODO())
 		if err != nil {
-			log.Error(err)
+			klog.Error(err)
 		}
 	}()
 

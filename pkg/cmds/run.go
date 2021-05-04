@@ -22,7 +22,7 @@ import (
 	"kubedb.dev/replication-mode-detector/pkg/cmds/server"
 
 	"github.com/spf13/cobra"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 )
 
 func NewCmdRun(out, errOut io.Writer, stopCh <-chan struct{}) *cobra.Command {

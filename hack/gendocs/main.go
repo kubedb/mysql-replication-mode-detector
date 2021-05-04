@@ -18,9 +18,9 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
+	"k8s.io/klog/v2"
 	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
 	"github.com/spf13/cobra/doc"
@@ -34,14 +34,14 @@ func main() {
 	fmt.Printf("Generating cli markdown tree in: %v\n", dir)
 	err := os.RemoveAll(dir)
 	if err != nil {
-		log.Fatal(err)
+		klog.Fatal(err)
 	}
 	err = os.MkdirAll(dir, 0755)
 	if err != nil {
-		log.Fatal(err)
+		klog.Fatal(err)
 	}
 	err = doc.GenMarkdownTree(rootCmd, dir)
 	if err != nil {
-		log.Fatal(err)
+		klog.Fatal(err)
 	}
 }
