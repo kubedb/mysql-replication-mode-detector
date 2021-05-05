@@ -20,11 +20,11 @@ import (
 	"fmt"
 	"os"
 
-	"k8s.io/klog/v2"
 	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
 	"github.com/spf13/cobra/doc"
 	"gomodules.xyz/runtime"
+	"k8s.io/klog/v2"
 )
 
 // ref: https://github.com/spf13/cobra/blob/master/doc/md_docs.md
