@@ -17,9 +17,9 @@ limitations under the License.
 package main
 
 import (
-	"k8s.io/klog/v2"
 	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
+	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/logs"
 )
 
