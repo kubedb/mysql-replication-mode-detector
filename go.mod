@@ -8,9 +8,9 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/pflag v1.0.5
 	go.mongodb.org/mongo-driver v1.1.2
-	gomodules.xyz/kglog v0.0.1
+	gomodules.xyz/logs v0.0.2
 	gomodules.xyz/runtime v0.2.0
-	gomodules.xyz/x v0.0.4
+	gomodules.xyz/x v0.0.5
 	k8s.io/api v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/apiserver v0.21.0

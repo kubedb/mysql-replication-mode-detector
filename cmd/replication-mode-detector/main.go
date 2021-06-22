@@ -19,14 +19,17 @@ package main
 import (
 	"kubedb.dev/replication-mode-detector/pkg/cmds"
 
-	"gomodules.xyz/kglog"
+	"gomodules.xyz/logs"
 	"k8s.io/klog/v2"
 )
 
 func main() {
-	kglog.InitLogs()
-	defer kglog.FlushLogs()
-	if err := cmds.NewRootCmd().Execute(); err != nil {
+	rootCmd := cmds.NewRootCmd()
+
+	logs.Init(rootCmd, true)
+	defer logs.FlushLogs()
+
+	if err := rootCmd.Execute(); err != nil {
 		klog.Fatal(err)
 	}
 }

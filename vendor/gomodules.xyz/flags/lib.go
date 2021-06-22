@@ -1,38 +1,31 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package flags
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"gomodules.xyz/sets"
 )
-
-func init() {
-	flag.Set("logtostderr", "true")
-}
-
-// Init all the pflags and all underlying go flags
-// All go flags of the underlying library converted to pflag and can set
-// from terminal as flags.
-func InitFlags() {
-	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
-	pflag.Parse()
-}
-
-// Sets log level in runtime.
-func SetLogLevel(l int) {
-	var mu sync.Mutex
-	mu.Lock()
-	flag.Set("v", strconv.Itoa(l))
-	mu.Unlock()
-}
 
 // Checks if a flag value in a command has been provided by the user
 // Or not. The ordering of the flags can be set for nested flags.
@@ -72,7 +65,7 @@ func EnsureAlterableFlags(cmd *cobra.Command, name ...string) {
 	}
 }
 
-func DumpAll(fs *pflag.FlagSet, list ...string) {
+func PrintFlags(fs *pflag.FlagSet, list ...string) {
 	bl := sets.NewString("secret", "token", "password", "credential")
 	if len(list) > 0 {
 		bl.Insert(list...)

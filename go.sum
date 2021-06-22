@@ -33,6 +33,8 @@ github.com/GoogleCloudPlatform/k8s-cloud-provider v0.0.0-20200415212048-7901bc82
 github.com/JeffAshton/win_pdh v0.0.0-20161109143554-76bb4ee9f0ab/go.mod h1:3VYc5hodBMJ5+l/7J4xAyMeuM2PNuepvHlGs8yilUCA=
 github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
 github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd/go.mod h1:64YHyfSL2R96J44Nlwm39UHepQbyR5q10x7iYa1ks2E=
+github.com/Masterminds/semver/v3 v3.1.1 h1:hLg3sBzpNErnxhQtUy/mmLR2I9foDujNK030IGemrRc=
+github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/go-winio v0.4.15/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/hcsshim v0.8.10-0.20200715222032-5eafd1556990/go.mod h1:ay/0dTb7NsG8QMDfsRfLHgZo/6xAJShLe1+ePPflihk=
@@ -1046,12 +1048,15 @@ golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 h1:go1bK/D/BFZV2I8cIQd1N
 golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f h1:hTyhR4r+tj1Uq7/PpFxLTzbeA0LhMVp7bEYfhkzFjdY=
 gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f/go.mod h1:K3m7N+nBOlf91/tpv8REUGwsAgaKFwElQCuiLhm12AQ=
+gomodules.xyz/flags v0.1.0 h1:e8Hp1akUD7FYxMHAD8h28F86v4OFBMKtBbGTt4cIYTw=
+gomodules.xyz/flags v0.1.0/go.mod h1:H9lmar5MMXuxHBrSgrGZt4q2gkD+8GCm/3Fs2FCE2zA=
 gomodules.xyz/homedir v0.0.0-20201104190528-bcd4d5d94b84/go.mod h1:rNt5O0KsgdJjAD/UXuxhO2N3b5TegqEk1T8HG9eraH4=
 gomodules.xyz/jsonpatch/v2 v2.0.1/go.mod h1:IhYNNY4jnS53ZnfE4PAmpKtDpTCj1JFXc+3mwe7XcUU=
 gomodules.xyz/jsonpatch/v2 v2.1.0 h1:Phva6wqu+xR//Njw6iorylFFgn/z547tw5Ne3HZPQ+k=
 gomodules.xyz/jsonpatch/v2 v2.1.0/go.mod h1:IhYNNY4jnS53ZnfE4PAmpKtDpTCj1JFXc+3mwe7XcUU=
-gomodules.xyz/kglog v0.0.1 h1:uB5HcipJvTDR5OLi3XiLzyvGzZbmAh37LO4TZGeur6c=
 gomodules.xyz/kglog v0.0.1/go.mod h1:+zsiQO9SrbeUeqI5fYEIl/96o5dNoWUM0J69BUMEmDc=
+gomodules.xyz/logs v0.0.2 h1:fRRzlqAC5JLoYHBAmr1D6NLXWepUngqNuGI52hH2oVc=
+gomodules.xyz/logs v0.0.2/go.mod h1:w3W9jc8c4tlBpJX1Qf2J1Hhb3e7tH8PvPOK+MT94vMQ=
 gomodules.xyz/password-generator v0.2.6/go.mod h1:TvwYYTx9+P1pPwKQKfZgB/wr2Id9MqAQ3B5auY7reNg=
 gomodules.xyz/pointer v0.0.0-20201105040656-991dd254b680/go.mod h1:sPLsC0+yLTRecUiC5yVlyvXhZ6LAGojNCRWNNqoplvo=
 gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209 h1:7tRaHoF3a725gtWs/NKkRNK5sBMXUyopVIsJ4WvhcTI=
@@ -1068,8 +1073,9 @@ gomodules.xyz/wait v0.0.0-20210218105358-639bd9211545 h1:iiD24jN1H8PzliVe1igIzYs
 gomodules.xyz/wait v0.0.0-20210218105358-639bd9211545/go.mod h1:g/epKzZQuCqgvhzhaoG4cSBNGHqnOrhFR4Q7szDJ1JM=
 gomodules.xyz/x v0.0.2/go.mod h1:E7ulagfan4tGmqGE07MD0J8o3HvCcPR862vYRvR0qd4=
 gomodules.xyz/x v0.0.3/go.mod h1:E7ulagfan4tGmqGE07MD0J8o3HvCcPR862vYRvR0qd4=
-gomodules.xyz/x v0.0.4 h1:noPqyyEctTqGLIa0afUF0EmPVM/ILhwW3pR1AI6pA9Q=
 gomodules.xyz/x v0.0.4/go.mod h1:dtWjlbllv91RG3dwY5MyRo2j1tSd6fH+cD89u1Tffj0=
+gomodules.xyz/x v0.0.5 h1:2ysXizs7gC9QpFds6qNGxMuzNwBzhM9VUfGVSv9Vv+E=
+gomodules.xyz/x v0.0.5/go.mod h1:EGy7cB7ifSuOcbNFc0U1zUPTf5yY8RtXVJlAlhGS9OE=
 gonum.org/v1/gonum v0.0.0-20180816165407-929014505bf4/go.mod h1:Y+Yx5eoAFn32cQvJDxZx5Dpnq+c3wtXuadVZAcxbbBo=
 gonum.org/v1/gonum v0.0.0-20190331200053-3d26580ed485/go.mod h1:2ltnJ7xHfj0zHS40VVPYEAAMTa3ZGguvHGBSJeRWqE0=
 gonum.org/v1/gonum v0.6.2/go.mod h1:9mxDZsDKxgMAuccQkewq682L+0eCu4dCN2yonUJTCLU=

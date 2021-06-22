@@ -14,24 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package kglog
+package logs
 
 import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
-	"github.com/golang/glog"
+	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	utilruntime "gomodules.xyz/runtime"
+	"gomodules.xyz/flags"
 	"gomodules.xyz/wait"
 	"k8s.io/klog/v2"
 )
 
 // ref:
 // - https://github.com/kubernetes/component-base/blob/master/logs/logs.go
-// - https://github.com/kubernetes/klog/blob/master/examples/coexist_glog/coexist_glog.go
 
 const logFlushFreqFlagName = "log-flush-frequency"
 
@@ -56,6 +56,60 @@ func (writer KlogWriter) Write(data []byte) (n int, err error) {
 	return len(data), nil
 }
 
+// Init initializes logs the way we want for AppsCode codebase.
+func Init(rootCmd *cobra.Command, printFlags bool) {
+	klog.InitFlags(nil)
+	pflag.CommandLine.SetNormalizeFunc(WordSepNormalizeFunc)
+	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+	InitLogs()
+
+	if rootCmd == nil {
+		// This branch only makes sense if Cobra is NOT used
+		// If Cobra is used, set the rootCmd
+		pflag.Parse()
+		fs := pflag.CommandLine
+		if printFlags {
+			flags.PrintFlags(fs)
+		}
+		flags.LoggerOptions = flags.GetOptions(fs)
+		return
+	}
+
+	fs := rootCmd.Flags()
+	if fn := rootCmd.PersistentPreRunE; fn != nil {
+		rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+			if printFlags {
+				flags.PrintFlags(fs)
+			}
+			flags.LoggerOptions = flags.GetOptions(fs)
+			return fn(cmd, args)
+		}
+	} else if fn := rootCmd.PersistentPreRun; fn != nil {
+		rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+			if printFlags {
+				flags.PrintFlags(fs)
+			}
+			flags.LoggerOptions = flags.GetOptions(fs)
+			fn(cmd, args)
+		}
+	} else {
+		rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+			if printFlags {
+				flags.PrintFlags(fs)
+			}
+			flags.LoggerOptions = flags.GetOptions(fs)
+		}
+	}
+}
+
+// WordSepNormalizeFunc changes all flags that contain "_" separators
+func WordSepNormalizeFunc(f *pflag.FlagSet, name string) pflag.NormalizedName {
+	if strings.Contains(name, "_") {
+		return pflag.NormalizedName(strings.Replace(name, "_", "-", -1))
+	}
+	return pflag.NormalizedName(name)
+}
+
 // InitLogs initializes logs the way we want for kubernetes.
 func InitLogs() {
 	log.SetOutput(KlogWriter{})
@@ -64,28 +118,8 @@ func InitLogs() {
 	go wait.Forever(klog.Flush, *logFlushFreq)
 }
 
-func ParseFlags() {
-	// ref: https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
-	utilruntime.Must(flag.CommandLine.Parse([]string{}))
-
-	klogFlags := flag.NewFlagSet("klog", flag.ExitOnError)
-	klog.InitFlags(klogFlags)
-
-	// Sync the glog and klog flags.
-	flag.CommandLine.VisitAll(func(f1 *flag.Flag) {
-		f2 := klogFlags.Lookup(f1.Name)
-		if f2 != nil {
-			value := f1.Value.String()
-			// Ignore error. klog's -log_backtrace_at flag throws error when set to empty string.
-			// Unfortunately, there is no way to tell if a flag was set to empty string or left unset on command line.
-			_ = f2.Value.Set(value)
-		}
-	})
-}
-
 // FlushLogs flushes logs immediately.
 func FlushLogs() {
-	glog.Flush()
 	klog.Flush()
 }
 

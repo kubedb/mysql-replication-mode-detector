@@ -17,14 +17,11 @@ limitations under the License.
 package cmds
 
 import (
-	"flag"
 	"os"
 
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	"github.com/spf13/cobra"
-	"gomodules.xyz/kglog"
-	"gomodules.xyz/x/flags"
 	v "gomodules.xyz/x/version"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	genericapiserver "k8s.io/apiserver/pkg/server"
@@ -37,16 +34,10 @@ func NewRootCmd() *cobra.Command {
 		Use:               "replication-mode-detector",
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
-			flags.DumpAll(c.Flags())
-
 			utilruntime.Must(scheme.AddToScheme(clientsetscheme.Scheme))
 			utilruntime.Must(appcatscheme.AddToScheme(clientsetscheme.Scheme))
 		},
 	}
-	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
-	// ref: https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
-	kglog.ParseFlags()
-
 	rootCmd.AddCommand(v.NewCmdVersion())
 
 	stopCh := genericapiserver.SetupSignalHandler()

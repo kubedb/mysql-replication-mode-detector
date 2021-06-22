@@ -13,6 +13,8 @@ github.com/Azure/go-autorest/autorest/date
 github.com/Azure/go-autorest/logger
 # github.com/Azure/go-autorest/tracing v0.6.0 => github.com/Azure/go-autorest/tracing v0.6.0
 github.com/Azure/go-autorest/tracing
+# github.com/Masterminds/semver/v3 v3.1.1
+github.com/Masterminds/semver/v3
 # github.com/NYTimes/gziphandler v1.1.1
 github.com/NYTimes/gziphandler
 # github.com/PuerkitoBio/purell v1.1.1
@@ -88,8 +90,6 @@ github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 github.com/gogo/protobuf/sortkeys
-# github.com/golang/glog v0.0.0-20210429001901-424d2337a529
-github.com/golang/glog
 # github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
 github.com/golang/groupcache/lru
 # github.com/golang/protobuf v1.4.3 => github.com/golang/protobuf v1.4.3
@@ -333,11 +333,13 @@ golang.org/x/text/width
 golang.org/x/time/rate
 # gomodules.xyz/clock v0.0.0-20200817085942-06523dba733f
 gomodules.xyz/clock
+# gomodules.xyz/flags v0.1.0
+gomodules.xyz/flags
 # gomodules.xyz/jsonpatch/v2 v2.1.0
 gomodules.xyz/jsonpatch/v2
-# gomodules.xyz/kglog v0.0.1
+# gomodules.xyz/logs v0.0.2
 ## explicit
-gomodules.xyz/kglog
+gomodules.xyz/logs
 # gomodules.xyz/pointer v0.0.0-20201105071923-daf60fa55209
 gomodules.xyz/pointer
 # gomodules.xyz/runtime v0.2.0
@@ -349,9 +351,8 @@ gomodules.xyz/sets
 gomodules.xyz/version
 # gomodules.xyz/wait v0.0.0-20210218105358-639bd9211545
 gomodules.xyz/wait
-# gomodules.xyz/x v0.0.4
+# gomodules.xyz/x v0.0.5
 ## explicit
-gomodules.xyz/x/flags
 gomodules.xyz/x/version
 # google.golang.org/appengine v1.6.7
 google.golang.org/appengine
